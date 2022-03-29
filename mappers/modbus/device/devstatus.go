@@ -1,17 +1,17 @@
 /*
 Copyright 2020 The KubeEdge Authors.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed gitee.com/ascend/mapper-go-sdk the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
+distributed gitee.com/ascend/mapper-go-sdk the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
+limitations gitee.com/ascend/mapper-go-sdk the License.
 */
 
 package device
@@ -19,9 +19,9 @@ package device
 import (
 	"k8s.io/klog/v2"
 
-	"github.com/kubeedge/mappers-go/mappers/common"
-	"github.com/kubeedge/mappers-go/mappers/modbus/driver"
-	"github.com/kubeedge/mappers-go/mappers/modbus/globals"
+	"gitee.com/ascend/mapper-go-sdk/mappers/common"
+	"gitee.com/ascend/mapper-go-sdk/mappers/modbus/driver"
+	"gitee.com/ascend/mapper-go-sdk/mappers/modbus/globals"
 )
 
 // GetStatus is the timer structure for getting device status.

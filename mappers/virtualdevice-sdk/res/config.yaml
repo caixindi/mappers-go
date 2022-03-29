@@ -1,0 +1,14 @@
+mqtt:
+  server: mqtts://39.104.160.208:8883
+  servername: 39.104.160.208
+  username: "wq"
+  password: "1234"
+  clientId: ""
+  certification: ../res/client.pem
+  privatekey: ../res/client.key
+  caCert: ../res/ca.pem
+http:
+  certification: ../res/server.pem
+  privatekey: ../res/server.key
+  caCert: ../res/httpca.pem
+configmap: ../res/virtual_device_test.json

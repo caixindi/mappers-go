@@ -433,6 +433,8 @@ github.com/kubeedge/beehive v0.0.0-20201125122335-cd19bca6e436 h1:HbC6FyGrtyNpcg
 github.com/kubeedge/beehive v0.0.0-20201125122335-cd19bca6e436/go.mod h1:98VgUi/n7HZkxT3Q7Lak75kPtIRRrWam02BgqgT0tkE=
 github.com/kubeedge/kubeedge v1.5.0 h1:n7xUvmabgeMGRfbFtpJtYFTDn/4IoTNDPGUxNmLMQXI=
 github.com/kubeedge/kubeedge v1.5.0/go.mod h1:5y7u+rt4/dB7AgfUKTSsGDGSGdQiyeoz57QkT5n4XZE=
+github.com/kubeedge/mappers-go v1.8.0 h1:WZ8JB+a6Drjpog9PNrN7Yv4X9AE3jrG+lK6ommNzYV0=
+github.com/kubeedge/mappers-go v1.8.0/go.mod h1:iz8G7X5zNp0QpbBhcoaZevzgOgGScRCRVp9mgKn+0bM=
 github.com/kubeedge/viaduct v0.0.0-20201130063818-e33931917980 h1:RBENVSbcHleONDU7Bep183/HpjW3A2Ahe4kZWPkfm9E=
 github.com/kubeedge/viaduct v0.0.0-20201130063818-e33931917980/go.mod h1:9YFeEaWK8WdVl+sjcQlhuRe1rEhWz3Nu/l29CKmL+EY=
 github.com/kubernetes-csi/csi-lib-utils v0.6.1/go.mod h1:GVmlUmxZ+SUjVLXicRFjqWUUvWez0g0Y78zNV9t7KfQ=

@@ -25,10 +25,10 @@ import (
 
 	"k8s.io/klog/v2"
 
-	"github.com/kubeedge/mappers-go/mappers/common"
-	"github.com/kubeedge/mappers-go/mappers/modbus/configmap"
-	"github.com/kubeedge/mappers-go/mappers/modbus/driver"
-	"github.com/kubeedge/mappers-go/mappers/modbus/globals"
+	"gitee.com/ascend/mapper-go-sdk/mappers/common"
+	"gitee.com/ascend/mapper-go-sdk/mappers/modbus/configmap"
+	"gitee.com/ascend/mapper-go-sdk/mappers/modbus/driver"
+	"gitee.com/ascend/mapper-go-sdk/mappers/modbus/globals"
 )
 
 // TwinData is the timer structure for getting twin/data.

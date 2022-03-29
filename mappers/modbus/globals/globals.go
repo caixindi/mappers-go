@@ -17,8 +17,8 @@ limitations under the License.
 package globals
 
 import (
-	"github.com/kubeedge/mappers-go/mappers/common"
-	"github.com/kubeedge/mappers-go/mappers/modbus/driver"
+	"gitee.com/ascend/mapper-go-sdk/mappers/common"
+	"gitee.com/ascend/mapper-go-sdk/mappers/modbus/driver"
 )
 
 // ModbusDev is the modbus device configuration and client information.
