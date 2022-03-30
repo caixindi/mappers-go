@@ -1,0 +1,2 @@
+﻿  png.c
+C:\Users\QWang\Desktop\相机SDK\lpng1637\lpng1637\pngstruct.h(30,10): fatal error C1083: 无法打开包括文件: “zlib.h”: No such file or directory

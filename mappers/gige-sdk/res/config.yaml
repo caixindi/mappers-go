@@ -1,0 +1,13 @@
+mqtt:
+  server: mqtts://39.104.160.208:8883
+  servicename: 39.104.160.208
+  username: ""
+  password: ""
+  certification: ../res/client.pem
+  privatekey: ../res/client.key
+  caCert: ../res/ca.pem
+http:
+  certification: ../res/server.pem
+  privatekey: ../res/server.key
+  caCert: ../res/httpca.pem
+configmap: ../res/configmap_test.json
