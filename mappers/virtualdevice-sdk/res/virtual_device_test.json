@@ -1,175 +1,197 @@
 {
-	"deviceInstances": [{
-		"id": "integer-generator-01",
-		"name": "random",
-		"protocol": "virtual-protocol",
-		"model": "random-01",
-		"twins": [{
-			"propertyName": "random-int",
-			"desired": {
-				"value": "30",
-				"metadata": {
-					"timestamp": "1550049403598",
-					"type": "int"
+	"deviceInstances": [
+		{
+			"id": "random-instance-02",
+			"name": "random-instance-02",
+			"protocol": "customized-protocol-random-instance-02",
+			"model": "random-01",
+			"twins": [
+				{
+					"propertyName": "random-int",
+					"desired": {
+						"value": "100",
+						"metadata": {
+							"timestamp": "1550049403598",
+							"type": "integer"
+						}
+					},
+					"reported": {
+						"value": "100",
+						"metadata": {
+							"timestamp": "1550049403598",
+							"type": "integer"
+						}
+					}
+				},
+				{
+					"propertyName": "random-float",
+					"desired": {
+						"value": "30",
+						"metadata": {
+							"timestamp": "1550049403598",
+							"type": "float"
+						}
+					},
+					"reported": {
+						"value": "30",
+						"metadata": {
+							"timestamp": "1550049403598",
+							"type": "float"
+						}
+					}
 				}
-			},
-			"reported": {
-				"value": "30",
-				"metadata": {
-					"timestamp": "1550049403598",
-					"type": "int"
+			],
+			"propertyVisitors": [
+				{
+					"name": "random-int",
+					"propertyName": "random-int",
+					"modelName": "random-01",
+					"protocol": "customized-protocol",
+					"visitorConfig": {
+						"configData": {
+							"dataType": "int"
+						},
+						"protocolName": "virtualProtocol"
+					}
+				},
+				{
+					"name": "random-float",
+					"propertyName": "random-float",
+					"modelName": "random-01",
+					"protocol": "customized-protocol",
+					"visitorConfig": {
+						"configData": {
+							"dataType": "float"
+						},
+						"protocolName": "virtualProtocol"
+					}
 				}
-			}
-		},{
-			"propertyName": "random-float",
-			"desired": {
-				"value": "30",
-				"metadata": {
-					"timestamp": "1550049403598",
-					"type": "float"
-				}
-			},
-			"reported": {
-				"value": "30",
-				"metadata": {
-					"timestamp": "1550049403598",
-					"type": "float"
-				}
-			}
-		}],
-		"propertyVisitors": [{
-			"name": "random-int",
-			"propertyName": "random-int",
-			"modelName": "random-01",
-			"protocol": "random",
-			"CollectCycle":2000000000,
-			"visitorConfig": {
-				"dataType": "int"
-			}
-		},{
-			"name": "random-float",
-			"propertyName": "random-float",
-			"modelName": "random-01",
-			"protocol": "random",
-			"CollectCycle":3000000000,
-			"visitorConfig": {
-				"dataType": "float"
-			}
-		}]
-	},{
-		"id": "integer-generator-02",
-		"name": "random",
-		"protocol": "virtual-protocol-test",
-		"model": "random-02",
-		"twins": [{
-			"propertyName": "random-int",
-			"desired": {
-				"value": "50",
-				"metadata": {
-					"timestamp": "1550049403000",
-					"type": "int"
-				}
-			},
-			"reported": {
-				"value": "50",
-				"metadata": {
-					"timestamp": "1550049403000",
-					"type": "int"
-				}
-			}
-		},{
-			"propertyName": "random-float",
-			"desired": {
-				"value": "50",
-				"metadata": {
-					"timestamp": "1550049403000",
-					"type": "float"
-				}
-			},
-			"reported": {
-				"value": "50",
-				"metadata": {
-					"timestamp": "1550049403000",
-					"type": "float"
-				}
-			}
-		}],
-		"propertyVisitors": [{
-			"name": "random-int",
-			"propertyName": "random-int",
-			"modelName": "random-02",
-			"protocol": "random",
-			"CollectCycle":2000000000,
-			"visitorConfig": {
-				"dataType": "int"
-			}
-		},{
-			"name": "random-float",
-			"propertyName": "random-float",
-			"modelName": "random-02",
-			"protocol": "random",
-			"CollectCycle":3000000000,
-			"visitorConfig": {
-				"dataType": "float"
-			}
-		}]
-	}],
-	"deviceModels": [{
-		"name": "random-01",
-		"properties": [{
-			"name": "random-int",
-			"dataType": "int",
-			"description": "Random number of virtual device production",
-			"accessMode": "ReadWrite",
-			"defaultValue": 0,
-			"minimum": 0,
-			"maximum": 1000
-		},{
-			"name": "random-float",
-			"dataType": "float",
-			"description": "Random number of virtual device production",
-			"accessMode": "ReadOnly",
-			"defaultValue": 0,
-			"minimum": 0,
-			"maximum": 1000
-		}]
-	},{
-		"name": "random-02",
-		"properties": [{
-			"name": "random-int",
-			"dataType": "int",
-			"description": "Random number of virtual device production",
-			"accessMode": "ReadWrite",
-			"defaultValue": 0,
-			"minimum": 0,
-			"maximum": 100
-		},{
-			"name": "random-float",
-			"dataType": "float",
-			"description": "Random number of virtual device production",
-			"accessMode": "ReadOnly",
-			"defaultValue": 0,
-			"minimum": 0,
-			"maximum": 100
-		}]
-	}],
-	"protocols": [{
-		"name": "virtual-protocol",
-		"protocol": "random",
-		"protocolConfig": {
-			"deviceId": 1
+			]
 		},
-		"protocolCommonConfig": {
-			"protocolID":1
+		{
+			"id": "random-instance-01",
+			"name": "random-instance-01",
+			"protocol": "customized-protocol-random-instance-01",
+			"model": "random-01",
+			"twins": [
+				{
+					"propertyName": "random-int",
+					"desired": {
+						"value": "100",
+						"metadata": {
+							"timestamp": "1550049403598",
+							"type": "integer"
+						}
+					},
+					"reported": {
+						"value": "100",
+						"metadata": {
+							"timestamp": "1550049403598",
+							"type": "integer"
+						}
+					}
+				},
+				{
+					"propertyName": "random-float",
+					"desired": {
+						"value": "30",
+						"metadata": {
+							"timestamp": "1550049403598",
+							"type": "float"
+						}
+					},
+					"reported": {
+						"value": "30",
+						"metadata": {
+							"timestamp": "1550049403598",
+							"type": "float"
+						}
+					}
+				}
+			],
+			"propertyVisitors": [
+				{
+					"name": "random-int",
+					"propertyName": "random-int",
+					"modelName": "random-01",
+					"protocol": "customized-protocol",
+					"visitorConfig": {
+						"protocolName": "virtualProtocol",
+						"configData": {
+							"dataType": "int"
+						}
+					}
+				},
+				{
+					"name": "random-float",
+					"propertyName": "random-float",
+					"modelName": "random-01",
+					"protocol": "customized-protocol",
+					"visitorConfig": {
+						"protocolName": "virtualProtocol",
+						"configData": {
+							"dataType": "float"
+						}
+					}
+				}
+			]
 		}
-	},{
-		"name": "virtual-protocol-test",
-		"protocol": "random",
-		"protocolConfig": {
-			"deviceId": 2
+	],
+	"deviceModels": [
+		{
+			"name": "random-01",
+			"properties": [
+				{
+					"name": "random-int",
+					"dataType": "int",
+					"description": "random-int",
+					"accessMode": "ReadWrite",
+					"defaultValue": 100,
+					"minimum": 0,
+					"maximum": 0
+				},
+				{
+					"name": "random-float",
+					"dataType": "float",
+					"description": "random-float",
+					"accessMode": "ReadOnly",
+					"defaultValue": 30,
+					"minimum": 0,
+					"maximum": 0
+				}
+			]
+		}
+	],
+	"protocols": [
+		{
+			"name": "customized-protocol-random-instance-02",
+			"protocol": "customized-protocol",
+			"protocolConfig": {
+				"configData": {
+					"deviceID": 1
+				},
+				"protocolName": "virtualProtocol"
+			},
+			"protocolCommonConfig": {
+				"customizedValues": {
+					"protocolID": 1
+				}
+			}
 		},
-		"protocolCommonConfig": {
-			"protocolID":2
+		{
+			"name": "customized-protocol-random-instance-01",
+			"protocol": "customized-protocol",
+			"protocolConfig": {
+				"protocolName": "virtualProtocol",
+				"configData": {
+					"deviceID": 2
+				}
+			},
+			"protocolCommonConfig": {
+				"customizedValues": {
+					"protocolID": 2
+				}
+			}
 		}
-	}]
+	]
 }
