@@ -34,7 +34,6 @@ func (c *RestController) InitRestRoutes() {
 	c.addReservedRoute(common.ApiDeviceReadCommandByIdRoute, c.ReadCommand).Methods(http.MethodGet)
 	// callback
 	c.addReservedRoute(common.ApiDeviceCallbackRoute, c.AddDevice).Methods(http.MethodPost)
-	//c.addReservedRoute(common.ApiDeviceCallbackRoute, c.UpdateDevice).Methods(http.MethodPut)
 	c.addReservedRoute(common.ApiDeviceCallbackIdRoute, c.RemoveDevice).Methods(http.MethodDelete)
 }
 

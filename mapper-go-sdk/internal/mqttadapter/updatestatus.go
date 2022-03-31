@@ -20,12 +20,11 @@ func (sd *StatusData) Run() {
 	var err error
 	sData := controller.GetDeviceStatus(sd.driverUnit.instanceID, sd.driverUnit.twin, sd.driverUnit.drivers, sd.driverUnit.mutex, sd.driverUnit.dic)
 	var payload []byte
-	// 把当前状态打包成payload
 	if payload, err = CreateMessageState(sData); err != nil {
 		klog.Errorf("Create message state failed: %v", err)
 		return
 	}
-	// 把payload推送到Mqtt broker
+	//  push payload to MQTT broker
 	if err = sd.MqttClient.Publish(sd.topic, payload); err != nil {
 		klog.Errorf("Publish failed: %v", err)
 		return

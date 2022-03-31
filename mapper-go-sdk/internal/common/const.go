@@ -19,7 +19,6 @@ const (
 // joint x joint the instancepool like driverName :=  common.DriverPrefix+instanceID+twin.PropertyName
 const (
 	DriverPrefix = "Driver"
-	MorePrefix   = "More"
 )
 
 const (
@@ -48,12 +47,7 @@ const (
 // Constants related to the possible content types supported by the APIs
 const (
 	ContentType     = "Content-Type"
-	ContentLength   = "Content-Length"
-	ContentTypeCBOR = "application/cbor"
 	ContentTypeJSON = "application/json"
-	ContentTypeYAML = "application/x-yaml"
-	ContentTypeText = "text/plain"
-	ContentTypeXML  = "application/xml"
 )
 
 type ErrKind string

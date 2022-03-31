@@ -53,7 +53,6 @@ func (td *TwinData) Run() {
 			return
 		}
 	}
-	//fmt.Printf("Publish payload... in %s\n",td.Topic)
 	if err := td.MqttClient.Publish(td.Topic, payload); err != nil {
 		klog.Errorf("Publish topic %v failed, err: %v", td.Topic, err)
 	}
