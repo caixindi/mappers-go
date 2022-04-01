@@ -21,6 +21,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.19.3
 	k8s.io/klog/v2 v2.4.0
+	github.com/stianeikeland/go-rpio v4.2.0+incompatible
 )
 
 replace (

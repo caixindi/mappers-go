@@ -6,5 +6,7 @@
   Turn off a Genicam device.
 
   @param mydevice  The MyDevice struct encapsulates a Genicam device
+  @return          The status of the function execution(0 is correct,
+                   otherwise it is wrong)
 */
-extern "C" void close_device(MyDevice myDevice);
+extern "C" int close_device(MyDevice myDevice);

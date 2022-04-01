@@ -9,6 +9,7 @@ help:
 	#
 	# Usage:
 	#   make template :  create a mapper based on a template.
+	#   make sdkmodel :  create a mapper template by mapper-go-sdk
 	#   make mapper {mapper-name} <action> <parameter>:  execute mapper building process.
 	#   make all :  execute building process to all mappers.
 	#

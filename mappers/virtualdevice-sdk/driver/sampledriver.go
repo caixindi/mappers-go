@@ -4,20 +4,32 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"k8s.io/klog/v2"
 	"math/rand"
 	"sync"
 )
 
 type VirtualDeviceProtocolConfig struct {
+	ProtocolName       string `json:"protocolName"`
+	ProtocolConfigData `json:"configData"`
+}
+
+type ProtocolConfigData struct {
 	DeviceId int `json:"deviceId,omitempty"`
 }
 
 type VirtualDeviceProtocolCommonConfig struct {
-	ProtocolID int `json:"protocolID"`
+	CommonCustomizedValues `json:"customizedValues"`
 }
 
+type CommonCustomizedValues struct {
+	ProtocolID int `json:"protocolID"`
+}
 type VirtualDeviceVisitorConfig struct {
+	ProtocolName      string `json:"protocolName"`
+	VisitorConfigData `json:"configData"`
+}
+
+type VisitorConfigData struct {
 	DataType string `json:"dataType"`
 }
 
@@ -50,20 +62,20 @@ func (vd *VirtualDevice) InitDevice(protocolCommon []byte) (err error) {
 }
 
 // SetConfig Parse the configmap's raw json message
-func (vd *VirtualDevice) SetConfig(protocolCommon, visitor, protocol []byte) (dataType string , deviceId int,err error) {
+func (vd *VirtualDevice) SetConfig(protocolCommon, visitor, protocol []byte) (dataType string, deviceId int, err error) {
 	vd.mutex.Lock()
 	defer vd.mutex.Unlock()
 	vd.NewClient()
 	if protocolCommon != nil {
 		if err = json.Unmarshal(protocolCommon, &vd.protocolCommonConfig); err != nil {
 			fmt.Printf("Unmarshal ProtocolCommonConfig error: %v\n", err)
-			return "",0,err
+			return "", 0, err
 		}
 	}
 	if visitor != nil {
 		if err = json.Unmarshal(visitor, &vd.visitorConfig); err != nil {
 			fmt.Printf("Unmarshal visitorConfig error: %v\n", err)
-			return "",0,err
+			return "", 0, err
 		}
 
 	}
@@ -71,7 +83,7 @@ func (vd *VirtualDevice) SetConfig(protocolCommon, visitor, protocol []byte) (da
 	if protocol != nil {
 		if err = json.Unmarshal(protocol, &vd.virtualProtocolConfig); err != nil {
 			fmt.Printf("Unmarshal ProtocolConfig error: %v\n", err)
-			return "",0,err
+			return "", 0, err
 		}
 	}
 	dataType = vd.visitorConfig.DataType
@@ -82,19 +94,17 @@ func (vd *VirtualDevice) SetConfig(protocolCommon, visitor, protocol []byte) (da
 // ReadDeviceData  is an interface that reads data from a specific device, data is a type of string
 func (vd *VirtualDevice) ReadDeviceData(protocolCommon, visitor, protocol []byte) (data interface{}, err error) {
 	// Parse raw json message to get a virtualDevice instance
-	DataTye,DeviceId,err := vd.SetConfig(protocolCommon, visitor, protocol)
+	DataTye, DeviceId, err := vd.SetConfig(protocolCommon, visitor, protocol)
 	if err != nil {
 		return nil, err
 	}
 	if DataTye == "int" {
 		if vd.client[DeviceId] == 0 {
-			klog.Error("vd.limit should not be 0")
 			return 0, errors.New("vd.limit should not be 0")
 		}
 		return rand.Intn(int(vd.client[DeviceId])), nil
 	} else if DataTye == "float" {
 		if vd.client[DeviceId] == 0 {
-			klog.Error("vd.limit should not be 0")
 			return 0, errors.New("vd.limit should not be 0")
 		}
 		// Simulate device that have time delay
@@ -108,7 +118,7 @@ func (vd *VirtualDevice) ReadDeviceData(protocolCommon, visitor, protocol []byte
 // WriteDeviceData is an interface that write data to a specific device, data's DataType is Consistent with configmap
 func (vd *VirtualDevice) WriteDeviceData(data interface{}, protocolCommon, visitor, protocol []byte) (err error) {
 	// Parse raw json message to get a virtualDevice instance
-	_,DeviceId,err := vd.SetConfig(protocolCommon, visitor, protocol)
+	_, DeviceId, err := vd.SetConfig(protocolCommon, visitor, protocol)
 	if err != nil {
 		return err
 	}
@@ -139,7 +149,7 @@ func (vd *VirtualDevice) NewClient() {
 
 // GetDeviceStatus is an interface to get the device status true is OK , false is DISCONNECTED
 func (vd *VirtualDevice) GetDeviceStatus(protocolCommon, visitor, protocol []byte) (status bool) {
-	_,_,err := vd.SetConfig(protocolCommon, visitor, protocol)
+	_, _, err := vd.SetConfig(protocolCommon, visitor, protocol)
 	if err != nil {
 		return false
 	}

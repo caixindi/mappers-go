@@ -15,14 +15,14 @@ extern "C" int open_device(MyDevice * myDevice, const char* device_serial_number
 			std::string e = ex.what();
 			*err = (char*)malloc(e.length());
 			strcpy(*err, ex.what());
-			std::cout << ex.what() << std::endl;
+			//std::cout << ex.what() << std::endl;
 		}
 	}
 	else
 	{
 		std::cout << 4 << std::endl;
 		ret = 2;
-		std::cout << "Cannot find device: " << device_serial_number << std::endl;
+		//std::cout << "Cannot find device: " << device_serial_number << std::endl;
 		std::string e = "Cannot find device: " + (std::string)device_serial_number;
 		*err = (char*)malloc(e.length());
 		strcpy(*err, e.c_str());

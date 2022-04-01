@@ -491,11 +491,11 @@ extern "C" int get_image(MyDevice myDevice, const char* imgfmt, unsigned char** 
     try {
         rcg::ImgFmt fmt = rcg::ImgFmt::PNM;
         //std::cout << imgfmt << std::endl;
-        if (!strcmp(imgfmt, "pnm"))
+        if (!strncmp(imgfmt, "pnm", 3)) 
         {
             fmt = rcg::ImgFmt::PNM;
         }
-        else if (!strcmp(imgfmt, "png"))
+        else if (!strncmp(imgfmt, "png", 3))
         {
             fmt = rcg::ImgFmt::PNG;
         }
@@ -558,36 +558,36 @@ extern "C" int get_image(MyDevice myDevice, const char* imgfmt, unsigned char** 
                 *err = (char*)"No images could be received";
             }
         }
-        else {
-            std::cout << "No streams available" << std::endl;
-            ret = 1;
+        else 
+        {
+            ret = 2;
+            //std::cout << "No streams available" << std::endl;
             *err = (char*)"No streams available";
         }
     }
-    catch (const std::exception& ex)
+    catch (const GENICAM_NAMESPACE::GenericException& ex)
     {
-        std::cout << "Exception: " << ex.what() << std::endl;
-        ret = 2;
+        ret = 3;
+        //std::cout << "Exception: " << ex.what() << std::endl;
         std::string e = "Exception: " + (std::string)ex.what();
         *err = (char*)malloc(e.length());
         strcpy(*err, e.c_str());
     }
-    catch (const GENICAM_NAMESPACE::GenericException& ex)
+    catch (const std::exception& ex)
     {
-        std::cout << "Exception: " << ex.what() << std::endl;
-        ret = 2;
+        ret = 4;
+        //std::cout << "Exception: " << ex.what() << std::endl;
         std::string e = "Exception: " + (std::string)ex.what();
         *err = (char*)malloc(e.length());
         strcpy(*err, e.c_str());
     }
     catch (...)
     {
-        std::cout << "Unknown exception!" << std::endl;
-        ret = 2;
+        ret = 5;
+        //std::cout << "Unknown exception!" << std::endl;
         *err = (char*)"Unknown exception!";
     }
     rcg::System::clearSystems();
-
     return ret;
 
 }

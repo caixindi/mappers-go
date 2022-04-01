@@ -58,7 +58,6 @@ namespace GENAPI_NAMESPACE
     * Currently there is no distinction between node locked and and unlocked
     * features.
     *
-    * \todo Caching, Polling obeying the Timeout value
     */
     class CDcamAccessCtrlRegImpl :  public CRegisterImpl, public IInteger
     {
