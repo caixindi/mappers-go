@@ -5,7 +5,7 @@ import (
 	"gitee.com/ascend/mapper-go-sdk/mappers/Template/driver"
 )
 
-// main Virtual device program entry
+// main Template device program entry
 func main() {
 	d := &driver.Template{}
 	service.Bootstrap("Template", d)
