@@ -8,9 +8,10 @@ void find_device()
     void* handle;
     typedef void (*FPTR)();
 
-    handle = dlopen("../res/librctest3_linux.so", 1);
+    handle = dlopen("../bin/librcapi_arm64.so", 1);
     FPTR fptr = (FPTR)dlsym(handle, "find_device");
     (*fptr)();
+	dlclose(handle);
     return;
 }
 
@@ -19,10 +20,11 @@ int open_device(unsigned int** device,char* deviceId,char** error)
     void* handle;
     typedef int (*FPTR)(unsigned int**,char*,char**);
 
-    handle = dlopen("../res/librctest3_linux.so", 1);
+    handle = dlopen("../bin/librcapi_arm64.so", 1);
     FPTR fptr = (FPTR)dlsym(handle, "open_device");
 
     int result = (*fptr)(device,deviceId,error);
+	dlclose(handle);
     return result;
 }
 
@@ -31,10 +33,11 @@ int set_value (unsigned int* device, char* feature, char* value,char** error)
     void* handle;
     typedef int (*FPTR)(unsigned int*,char*,char*,char**);
 
-    handle = dlopen("../res/librctest3_linux.so", 1);
+    handle = dlopen("../bin/librcapi_arm64.so", 1);
     FPTR fptr = (FPTR)dlsym(handle, "set_value");
 
     int result = (*fptr)(device,feature,value,error);
+	dlclose(handle);
     return result;
 }
 
@@ -43,43 +46,45 @@ int get_value (unsigned int* device, char* feature, char** value,char** error)
     void* handle;
     typedef int (*FPTR)(unsigned int*,char*,char**,char**);
 
-    handle = dlopen("../res/librctest3_linux.so", 1);
+	handle = dlopen("../bin/librcapi_arm64.so", 1);
     FPTR fptr = (FPTR)dlsym(handle, "get_value");
 
     int result = (*fptr)(device,feature,value,error);
+	dlclose(handle);
     return result;
 }
 
 int get_image (unsigned int* device, char* type, char** bufferPointer,int* size,char** error)
 {
-    void* handle;
     typedef int (*FPTR)(unsigned int*, char*, char**,int*,char**);
-
-    handle = dlopen("../res/librctest3_linux.so", 1);
+	void* handle;
+	handle = dlopen("../bin/librcapi_arm64.so", 1);
     FPTR fptr = (FPTR)dlsym(handle, "get_image");
 
     int result = (*fptr)(device,type,bufferPointer,size,error);
+	dlclose(handle);
     return result;
 }
 
-void close_device (unsigned int* device)
+int close_device (unsigned int* device)
 {
     void* handle;
     typedef void (*FPTR)(unsigned int*);
 
-    handle = dlopen("../res/librctest3_linux.so", 1);
+    handle = dlopen("../bin/librcapi_arm64.so", 1);
     FPTR fptr = (FPTR)dlsym(handle, "close_device");
 
     (*fptr)(device);
-    return;
-}
+	int result=dlclose(handle);
+    return result;
+}//链接dl库
 #cgo LDFLAGS: -ldl
 */
 import "C"
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
+	"k8s.io/klog/v2"
 	"reflect"
 	"strconv"
 	"unsafe"
@@ -88,7 +93,6 @@ import (
 var clients map[string]*C.uint
 
 func (geClient *GigEVisionDevice) Set(FeatureName string, value interface{}) (err error) {
-	//fmt.Println("Write ", FeatureName)
 	geClient.mutex.Lock()
 	var convert string
 	switch value.(type) {
@@ -144,29 +148,34 @@ func (geClient *GigEVisionDevice) Set(FeatureName string, value interface{}) (er
 	var msg *C.char
 	signal := C.set_value(geClient.dev, C.CString(FeatureName), C.CString(convert), &msg)
 	if signal != 0 {
-		fmt.Println("Get Error: ", C.GoString(msg))
-		err = errors.New(C.GoString(msg))
+		err = errors.New(C.GoString("Set command from device ", geClient.ProtocolCommonConfig.DeviceSN, " failed : ", msg))
+		if signal == 1|2 {
+			go geClient.ReConnectDevice()
+		}
 		return err
 	}
-	fmt.Println("Set ", geClient.ProtocolCommonConfig.DeviceId, " :", FeatureName, "=", convert)
+	klog.Infof("Set command success from device %s set %s : %s ", geClient.ProtocolCommonConfig.DeviceSN, FeatureName, convert)
 	return nil
 }
 
 func (geClient *GigEVisionDevice) Get(FeatureName string) (results []byte, err error) {
-	//fmt.Println("Read ", FeatureName)
 	geClient.mutex.RLock()
 	defer geClient.mutex.RUnlock()
+	var imageForm = C.CString("png")
 	if FeatureName == "image" {
 		var imageBuffer *byte
 		var size int
-		var p **byte = &imageBuffer
+		var p = &imageBuffer
 		var msg *C.char
-		signal := C.get_image(geClient.dev, C.CString("png"), (**C.char)(unsafe.Pointer(p)), (*C.int)(unsafe.Pointer(&size)), &msg)
+		signal := C.get_image(geClient.dev, imageForm, (**C.char)(unsafe.Pointer(p)), (*C.int)(unsafe.Pointer(&size)), &msg)
 		if signal != 0 {
-			fmt.Println("Get Image Error: ", C.GoString(msg))
-			err = errors.New(C.GoString(msg))
+			err = errors.New(C.GoString("Failed to get ", geClient.ProtocolCommonConfig.DeviceSN, "'s images : ", msg))
+			if signal == 2|3|4|5 {
+				go geClient.ReConnectDevice()
+			}
 			return nil, err
 		}
+		klog.Infof("Get images success from device %s , image form is %s", geClient.ProtocolCommonConfig.DeviceSN, imageForm)
 		var bufferHdr = (*reflect.SliceHeader)(unsafe.Pointer(&results))
 		bufferHdr.Data = uintptr(unsafe.Pointer(imageBuffer))
 		bufferHdr.Len = size
@@ -176,11 +185,10 @@ func (geClient *GigEVisionDevice) Get(FeatureName string) (results []byte, err e
 		var value *C.char
 		signal := C.get_value(geClient.dev, C.CString(FeatureName), &value, &msg)
 		if signal != 0 {
-			fmt.Println("Get Error: ", C.GoString(msg))
-			err = errors.New(C.GoString(msg))
+			err = errors.New(C.GoString("Get command from device ", geClient.ProtocolCommonConfig.DeviceSN, " failed : ", msg))
 			return nil, err
 		}
-		//fmt.Println("Read Data From Device ", FeatureName, ": ", C.GoString(value))
+		klog.Infof("Get command success from device %s get %s : %s ", geClient.ProtocolCommonConfig.DeviceSN, FeatureName, C.GoString(value))
 		results = []byte(C.GoString(value))
 	}
 	return results, err
@@ -189,20 +197,21 @@ func (geClient *GigEVisionDevice) Get(FeatureName string) (results []byte, err e
 func (geClient *GigEVisionDevice) NewClient() (err error) {
 	var msg *C.char
 	var dev *C.uint
-	addr := geClient.ProtocolCommonConfig.DeviceId
+	addr := geClient.ProtocolCommonConfig.DeviceSN
 	if _, ok := clients[addr]; ok {
 		return nil
 	}
 	if clients == nil {
 		clients = make(map[string]*C.uint)
 	}
-	signal := C.open_device(&dev, C.CString(geClient.ProtocolCommonConfig.DeviceId), &msg)
-	geClient.dev = dev
+	signal := C.open_device(&dev, C.CString(geClient.ProtocolCommonConfig.DeviceSN), &msg)
 	if signal != 0 {
-		fmt.Println("Open Error: ", C.GoString(msg))
-		err = errors.New(C.GoString(msg))
+		klog.Errorf("Failed to open device %s : %s Please check your camera link", geClient.ProtocolCommonConfig.DeviceSN, C.GoString(msg))
+		go geClient.ReConnectDevice()
+		err = errors.New(C.GoString("Failed to open device ", geClient.ProtocolCommonConfig.DeviceSN, " : ", msg))
 		return err
 	}
+	geClient.dev = dev
 	clients[addr] = geClient.dev
 	return nil
 }

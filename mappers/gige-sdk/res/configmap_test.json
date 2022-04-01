@@ -324,7 +324,7 @@
 
 		},
 		"protocolCommonConfig": {
-			"deviceId": "23636483"
+			"deviceSN": "23636483"
 		}
 	}]
 }
