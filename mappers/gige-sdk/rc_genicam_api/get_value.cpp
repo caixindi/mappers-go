@@ -16,14 +16,14 @@ extern "C" int get_value(MyDevice myDevice, const char* key, char** value, char*
 	catch (const GENICAM_NAMESPACE::GenericException& ex)
 	{
 		ret = 1;
-		std::cout << ex.what() << std::endl;
+		//std::cout << ex.what() << std::endl;
 		std::string e = ex.what();
 		*err = (char*)malloc(e.length());
 		strcpy(*err, ex.what());
 	}
 	catch (const std::exception& ex) {
 		ret = 2;
-		std::cout << ex.what() << std::endl;
+		//std::cout << ex.what() << std::endl;
 		std::string e = ex.what();
 		*err = (char*)malloc(e.length());
 		strcpy(*err, ex.what());

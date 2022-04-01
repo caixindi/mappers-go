@@ -575,6 +575,10 @@ SORT_BY_SCOPE_NAME     = NO
 
 STRICT_PROTO_MATCHING  = NO
 
+# The GENERATE_TODOLIST tag can be used to enable ( YES) or disable ( NO) the
+# documentation.
+# The default value is: YES.
+
 GENERATE_TODOLIST      = YES
 
 # The GENERATE_TESTLIST tag can be used to enable ( YES) or disable ( NO) the

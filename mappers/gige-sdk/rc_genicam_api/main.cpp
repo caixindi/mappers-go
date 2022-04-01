@@ -10,7 +10,7 @@
 
 using namespace std;
 
-extern "C" int main() {
+int main() {
 	time_t a, b;
 	find_device();
 	std::string key_value = "";
@@ -36,7 +36,8 @@ extern "C" int main() {
 				a = clock();
 				const char* imgfmt = key_value.c_str();
 				ret = get_image(myDevice, imgfmt, &image_buffer, &size, &err);
-				cout << "The size of image£º" << size << endl;
+				cout << "err:" << err << endl;
+				cout << "The size of image:" << size << endl;
 				std::string name = "test." + key_value;
 				std::ofstream out(name, std::ios::binary);
 				std::streambuf* sb = out.rdbuf();

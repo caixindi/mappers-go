@@ -58,7 +58,6 @@ namespace GENAPI_NAMESPACE
     * Currently there is no distinction between node locked and and unlocked
     * features.
     *
-    *
     */
     class CDcamAccessCtrlRegImpl :  public CRegisterImpl, public IInteger
     {

@@ -11,6 +11,7 @@ extern "C" int set_value(MyDevice myDevice, const char* key, const char* value, 
 	catch (const GENICAM_NAMESPACE::GenericException& ex)
 	{
 		ret = 1;
+		std::cout << ret << std::endl;
 		std::cout << ex.what() << std::endl;
 		std::string e = ex.what();
 		*err = (char*)malloc(e.length());
@@ -18,6 +19,7 @@ extern "C" int set_value(MyDevice myDevice, const char* key, const char* value, 
 	}
 	catch (const std::exception& ex) {
 		ret = 2;
+		std::cout << ret << std::endl;
 		std::cout << ex.what() << std::endl;
 		std::string e = ex.what();
 		*err = (char*)malloc(e.length());

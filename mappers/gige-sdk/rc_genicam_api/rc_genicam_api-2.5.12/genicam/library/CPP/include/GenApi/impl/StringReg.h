@@ -49,7 +49,6 @@ namespace GENAPI_NAMESPACE
     //! Implements a simple string register
     /**
     *
-    *
     */
     class CStringRegisterImpl : public CRegisterImpl, public IString
     {
