@@ -4,6 +4,7 @@ package driver
 #include <dlfcn.h>
 int open_device(unsigned int** device,char* deviceId,char** error);
 int get_value (unsigned int* device, char* feature, char** value,char** error);
+int set_value (unsigned int* device, char* feature, char* value,char** error);
 void close_device (unsigned int* device);
 //链接dl库
 #cgo LDFLAGS: -ldl
@@ -136,7 +137,7 @@ func (geClient *GigEVisionDevice) GetDeviceStatus(protocolCommon, visitor, proto
 		go geClient.ReConnectDevice()
 		return false
 	}
-	signal = C.set_value(geClient.dev, C.CString(geClient.visitorConfig.FeatureName), C.CString(value), &msg)
+	signal = C.set_value(geClient.dev, C.CString(geClient.visitorConfig.FeatureName), value, &msg)
 	if signal != 0 {
 		klog.Errorf("Device %s unconnected", geClient.ProtocolCommonConfig.DeviceSN)
 		go geClient.ReConnectDevice()

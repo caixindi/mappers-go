@@ -148,7 +148,8 @@ func (geClient *GigEVisionDevice) Set(FeatureName string, value interface{}) (er
 	var msg *C.char
 	signal := C.set_value(geClient.dev, C.CString(FeatureName), C.CString(convert), &msg)
 	if signal != 0 {
-		err = errors.New(C.GoString("Set command from device ", geClient.ProtocolCommonConfig.DeviceSN, " failed : ", msg))
+		var errorMsg = "Set command from device " + geClient.ProtocolCommonConfig.DeviceSN + " failed : " + C.GoString(msg)
+		err = errors.New(errorMsg)
 		if signal == 1|2 {
 			go geClient.ReConnectDevice()
 		}
@@ -169,7 +170,8 @@ func (geClient *GigEVisionDevice) Get(FeatureName string) (results []byte, err e
 		var msg *C.char
 		signal := C.get_image(geClient.dev, imageForm, (**C.char)(unsafe.Pointer(p)), (*C.int)(unsafe.Pointer(&size)), &msg)
 		if signal != 0 {
-			err = errors.New(C.GoString("Failed to get ", geClient.ProtocolCommonConfig.DeviceSN, "'s images : ", msg))
+			var errorMsg = "Failed to get " + geClient.ProtocolCommonConfig.DeviceSN + "'s images : " + C.GoString(msg)
+			err = errors.New(errorMsg)
 			if signal == 2|3|4|5 {
 				go geClient.ReConnectDevice()
 			}
@@ -185,7 +187,8 @@ func (geClient *GigEVisionDevice) Get(FeatureName string) (results []byte, err e
 		var value *C.char
 		signal := C.get_value(geClient.dev, C.CString(FeatureName), &value, &msg)
 		if signal != 0 {
-			err = errors.New(C.GoString("Get command from device ", geClient.ProtocolCommonConfig.DeviceSN, " failed : ", msg))
+			var errorMsg = "Get command from device " + geClient.ProtocolCommonConfig.DeviceSN + " failed : " + C.GoString(msg)
+			err = errors.New(errorMsg)
 			return nil, err
 		}
 		klog.Infof("Get command success from device %s get %s : %s ", geClient.ProtocolCommonConfig.DeviceSN, FeatureName, C.GoString(value))
@@ -208,7 +211,8 @@ func (geClient *GigEVisionDevice) NewClient() (err error) {
 	if signal != 0 {
 		klog.Errorf("Failed to open device %s : %s Please check your camera link", geClient.ProtocolCommonConfig.DeviceSN, C.GoString(msg))
 		go geClient.ReConnectDevice()
-		err = errors.New(C.GoString("Failed to open device ", geClient.ProtocolCommonConfig.DeviceSN, " : ", msg))
+		var errorMsg = "Failed to open device " + geClient.ProtocolCommonConfig.DeviceSN + " : " + C.GoString(msg)
+		err = errors.New(errorMsg)
 		return err
 	}
 	geClient.dev = dev
