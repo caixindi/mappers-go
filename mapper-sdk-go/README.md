@@ -166,7 +166,7 @@ according to your own CRD definition
 ```propertyName```  
 according to your own CRD definition  
 
-If you have any questions,you can see examples in the [example](example/virtualDevice/README.md)  
+If you have any questions,you can see examples in the [example](../mappers/virtualdevice-sdk/README.md)  
 
 The functions and urls are as follows. 
 1. Detect whether the RESTful service starts normally  
