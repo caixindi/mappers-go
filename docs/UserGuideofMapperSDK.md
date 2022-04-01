@@ -1,8 +1,8 @@
-# User Guide of Customized Mapper in KubeEdge
+# User Guide of Customized Mapper SDK in KubeEdge
 ## 1 Introduction
 ### 1.1 Purpose
 The purpose of this document is to guide users to generate a custom 
-mapper by mapper-go-sdk and run it. 
+mapper by mapper-sdk-go and run it. 
 Now we have **_ModBus_** , **_Gige_** and **_device that communicates 
 over a network_**  mappers. For other protocol, you can generate your own mapper according to this guide to control the
 edge devices.
@@ -15,23 +15,23 @@ this mapper to connect your device easily.
 We use CRD to define a new device. There're 2 device related CRDs. One is device model, it defines some common definitions 
 such as device properties, the property is like temperature, humidity, and enable-counter; another CRD is device instance, 
 it defines the detailed definition related to the specific device. More details could refer to the [device crd design](https://github.com/kubeedge/kubeedge/blob/master/docs/proposals/device-crd.md#device-model-crd).
-### 2.2 Mapper-Go-SDK Design
-For this part, you could refer to the [mapper-go-sdk design](mapper-go-sdk-design.md).
+### 2.2 Mapper-SDK-GO Design
+For this part, you could refer to the [mapper-sdk-go design](MapperDesign.md).
 
 ## 3 Step by Step Instructions
 Use example to help build your first mapper.
 ### 3.1 Define the device model and device instance
 As an example, the VirtualDevice mapper is one customized mapper. Its function is to generate random int and float numbers, 
 and can send commands through the cloud  or RESTful API to control the maximum value of int nums.
-You can find the definition of virtual device in [configmap](../example/virtualDevice/res/virtual_device_test.json).
+You can find the definition of virtual device in [configmap](../_template/mapper-sdk/res/virtual_device_test.json).
 
 ### 3.2 Define structure
-Mapper-go-sdk will parse the configmap you defined. The most important three parameters are
+Mapper-sdk-go will parse the configmap you defined. The most important three parameters are
 `protocolCommonConfig` `visitorConfig` `ProtocolConfig` . These parameters will provide to you in ```[]byte```.
-So define your structure according to your own configmap. You can get a example in [sampledriver.go](../example/virtualDevice/driver/sampledriver.go)
+So define your structure according to your own configmap. You can get an example of lighting an LED:[LED Driver](../mappers/gpio-sdk/driver/sampledriver.go)
 
 ### 3.3 Implements interface
-Mapper-go-sdk will provide the following interfaces,and you can find them in [protocoldriver.go](../pkg/models/protocoldriver.go)
+Mapper-sdk-go will provide the following interfaces,and you can find them in [protocoldriver.go](../mapper-sdk-go/pkg/models/protocoldriver.go)
 ```go
 type ProtocolDriver interface {
 // InitDevice  do the job of initialization
@@ -81,6 +81,6 @@ StopDevice() (err error)
 }
 ```
 ### 3.4 Make it
-Run "make help" in "mappers-go-sdk" directory to get all availabe make methods. Try them and make your mapper.
+Run "make help" in mappers directory to get all availabe make methods. Try them and make your mapper.
 ### 3.5 More information about examples
-Refer to [README.md](../example/virtualDevice/README.md), Start your mapper service
+Refer to [README.md](../mappers/virtualdevice-sdk/README.md), Start your mapper service

@@ -1,6 +1,6 @@
 mqtt:
-  server: mqtt://127.0.0.1:11883
-  servername: 127.0.0.1
+  server: mqtt://127.0.0.1:1883 # mqtt's ip:port
+  servername: 127.0.0.1 # server's ip
   username: ""
   password: ""
   clientId: ""

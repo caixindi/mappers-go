@@ -79,7 +79,7 @@ according to your own CRD definition
 
 2. Get device's property  
    Method=<font color=green>**GET**</font>  
-   https://127.0.0.1:1215/api/v1/device/id/deviceInstances-ID/propertyName
+   `https://127.0.0.1:1215/api/v1/device/id/deviceInstances-ID/propertyName`
 
 3. Set device's config  
    Method=<font color=#60D6F4>**PUT**</font>

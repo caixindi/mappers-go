@@ -29,6 +29,7 @@ function entry() {
   sed -i "s/${mapperVar}/${mapperNameLowercase}/g" ${mapperPath}/Dockerfile
   # gofmt
   go fmt "${mapperPath}/..." >/dev/null 2>&1
+  echo "You can find your customized mapper in mappers "
 }
 
 entry "$@"
