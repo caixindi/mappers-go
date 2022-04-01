@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitee.com/ascend/mapper-go-sdk/mapper-go-sdk/pkg/service"
+	"gitee.com/ascend/mapper-go-sdk/mapper-sdk-go/pkg/service"
 	"gitee.com/ascend/mapper-go-sdk/mappers/gige-sdk/driver"
 )
 

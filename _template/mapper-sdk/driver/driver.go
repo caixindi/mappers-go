@@ -35,7 +35,7 @@ type VisitorConfigData struct {
 type Template struct {
 	// TODO: add some vars to help your implement the SDK interfaces
 	mutex sync.Mutex
-	virtualProtocolConfig TemplateProtocolConfig
+	protocolConfig TemplateProtocolConfig
 	protocolCommonConfig  TemplateProtocolCommonConfig
 	visitorConfig         TemplateVisitorConfig
 }
@@ -73,7 +73,7 @@ func (d *Template) SetConfig(protocolCommon, visitor, protocol []byte) (err erro
 
 	}
 	if protocol != nil {
-		if err = json.Unmarshal(protocol, &d.virtualProtocolConfig); err != nil {
+		if err = json.Unmarshal(protocol, &d.protocolConfig); err != nil {
 			fmt.Printf("Unmarshal protocolConfig error: %v\n", err)
 			return err
 		}
@@ -107,7 +107,7 @@ func (d *Template) WriteDeviceData(data interface{}, protocolCommon, visitor, pr
 // This function is called when mapper stops serving
 func (d *Template) StopDevice() (err error) {
 	// TODO: If you need to exit safely, set the exit operation, otherwise it can be ignored
-	fmt.Println("----------Stop Virtual Device Successful----------")
+	fmt.Println("----------Stop Template Successful----------")
 	return nil
 }
 
