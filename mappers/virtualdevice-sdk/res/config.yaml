@@ -1,6 +1,6 @@
 mqtt:
-  server: mqtts://39.104.160.208:8883
-  servername: 39.104.160.208
+  server: mqtts://192.168.137.51:8883
+  servername: 192.168.137.51
   username: "wq"
   password: "1234"
   clientId: ""
