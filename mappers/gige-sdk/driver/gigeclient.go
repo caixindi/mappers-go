@@ -94,6 +94,11 @@ var clients map[string]*C.uint
 
 func (geClient *GigEVisionDevice) Set(FeatureName string, value interface{}) (err error) {
 	geClient.mutex.Lock()
+	if geClient.dev == nil {
+		var errorMsg = "Device " + geClient.ProtocolCommonConfig.DeviceSN + " unreachabled " + " failed to set"
+		err = errors.New(errorMsg)
+		return err
+	}
 	var convert string
 	switch value.(type) {
 	case float64:
@@ -163,6 +168,11 @@ func (geClient *GigEVisionDevice) Get(FeatureName string) (results []byte, err e
 	geClient.mutex.RLock()
 	defer geClient.mutex.RUnlock()
 	var imageForm = C.CString("png")
+	if geClient.dev == nil {
+		var errorMsg = "Device " + geClient.ProtocolCommonConfig.DeviceSN + " unreachabled " + " failed to get"
+		err = errors.New(errorMsg)
+		return nil, err
+	}
 	if FeatureName == "image" {
 		var imageBuffer *byte
 		var size int

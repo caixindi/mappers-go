@@ -1,8 +1,8 @@
 mqtt:
-  server: mqtts://39.104.160.208:8883
-  servicename: 39.104.160.208
-  username: ""
-  password: ""
+  server: mqtt://192.168.137.51:1883
+  servicename: 192.168.137.51
+  username: "wq"
+  password: "1234"
   certification: ../res/client.pem
   privatekey: ../res/client.key
   caCert: ../res/ca.pem
