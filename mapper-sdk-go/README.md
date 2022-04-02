@@ -25,7 +25,8 @@ You can find mapper-sdk-go model in [mappers](../mappers)
       --v string                    log level (default "1")
 
 
-## Supported MQTT topics
+## Supported MQTT
+### MQTT topics
 	TopicTwinUpdateDelta = "$hw/events/device/%s/twin/update/delta"  
 	TopicStateUpdate     = "$hw/events/device/%s/state/update"
 	TopicTwinUpdate      = "$hw/events/device/%s/twin/update"
@@ -37,10 +38,10 @@ You can find mapper-sdk-go model in [mappers](../mappers)
 3. `$hw/events/device/+/twin/+`: The two + symbols can be replaced by the deviceID on whose twin the operation is to be performed and any one of(update,cloud_updated,get) respectively.
 4. `$ke/events/device/+/data/update`: This topic is add in KubeEdge v1.4, and used for delivering time-serial data. This topic is not processed by edgecore, instead, they should be processed by third-party component on edge node such as EMQ Kuiper.
 5. `$hw/events/node/%s/membership/updated`: This topic is used to remove/add device. + symbol can be replaced with ID of the device whose state is to be updated.
-### in addition
+### In addition
 If you want to accept large packets over HTTPS instead of mqtt, you can set ```CollectCycle``` to ```-1``` in configmap.  
 Then the twin that ```CollectCycle``` be sett to ```-1``` will not be actively reported to mqtt broker
-## Enabling MQTT Security Features
+## Enable MQTT Security Features
 ### Generate the self-signed CA certificate
 First, we need a self signed CA certificate. If you want to generate this certificate, you need to sign it with a private key. You can generate this private key by executing the following command:
 ```shell
@@ -104,7 +105,7 @@ Finally, you should use the generated CA certificate to sign the client and gene
 ```shell
 openssl x509 -req -days 3650 -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt
 ```
-### Enable MQTT TLS/SSL
+### Next steps to enable MQTT TLS/SSL
 After completing the appeal operation, we can enable TLS / SSL two-way authentication in edgecore. Edgecore uses mosquitto as mqtt broker by default.
 
 First, we need to move the generated `ca.crt` certificate file to the `/etc/kubeedge/ca` directory, and put the `client.crt` and `client.key` to `/etc/kubeedge/certs` directory.
@@ -155,7 +156,7 @@ mosquitto -c /etc/mosquitto/mosquitto.conf -d
 systemctl restart edgecore.service
 ```
 So far, MQTT TLS/SSL two-way authentication in edgecore is completed.
-## Supported RESTful API
+## Supported Restful API
 The URLs listed below are given in the form of local IP. You can use these services from any network accessible to mapper   
 
 Port ```1215``` is enabled by default.      
@@ -187,7 +188,22 @@ You must provide a JSON body that conforms to the CRD definition
 5. Delete a deviceInstance  
    Method=<font color=#FF5555>**DEL**</font>
    https://127.0.0.1:1215/api/v1/callback/device/id/deviceInstances-ID
+### Enable Restful Security Features
+The steps for generating certificates are similar to those for MQTT certificates. You can refer to the MQTT certificate generation steps.
 
+Make the following convention, use a three-digit binary number, from left to right, represent the file path of the CA certificate, the server certificate, and the server key, whether the file path is provided, the number zero means the file is not provided, and the number one means the file is provided.
+
+|     | Status                 |
+|-----|------------------------|
+| 000 | No certification       |
+| 001 | Illegal                |
+| 010 | Illegal                |
+| 011 | One-way authentication |
+| 100 | Illegal                |
+| 101 | Illegal                |
+| 110 | Illegal                |
+| 111 | Two-way authentication |
+The `config.yaml` provided by the user must comply with the above agreement.
 ## More details
 
 You can get more details in [UserGuideofMapperSDK](../docs/UserGuideofMapperSDK.md)
