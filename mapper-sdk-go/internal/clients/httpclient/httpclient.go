@@ -4,6 +4,7 @@ package httpclient
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"gitee.com/ascend/mapper-go-sdk/mapper-sdk-go/internal/config"
 	"gitee.com/ascend/mapper-go-sdk/mapper-sdk-go/internal/httpadapter"
 	"gitee.com/ascend/mapper-go-sdk/mapper-sdk-go/pkg/di"
@@ -11,7 +12,6 @@ import (
 	"io/ioutil"
 	"k8s.io/klog/v2"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -39,24 +39,34 @@ func NewHttpClient(dic *di.Container) *HttpClient {
 // Init is a method to construct HTTP server
 func (hc *HttpClient) Init(c config.Config) error {
 	hc.restController.InitRestRoutes()
-	caCrtPath := c.Http.CaCert
-	pool := x509.NewCertPool()
-	crt, err := ioutil.ReadFile(caCrtPath)
-	if err != nil {
-		klog.Errorf("Failed to read cert %s:%v", caCrtPath, err)
-		os.Exit(1)
-	}
-	pool.AppendCertsFromPEM(crt)
-	hc.server = &http.Server{
-		Addr:         hc.IP + ":" + hc.Port,
-		WriteTimeout: hc.WriteTimeout,
-		ReadTimeout:  hc.ReadTimeout,
-		Handler:      hc.restController.Router,
-		TLSConfig: &tls.Config{
-			ClientCAs: pool,
-			// check client certificate file
-			ClientAuth: tls.RequireAndVerifyClientCert,
-		},
+	if c.Http.CaCert == "" {
+		hc.server = &http.Server{
+			Addr:         hc.IP + ":" + hc.Port,
+			WriteTimeout: hc.WriteTimeout,
+			ReadTimeout:  hc.ReadTimeout,
+			Handler:      hc.restController.Router,
+		}
+	} else {
+		// Enable two-way authentication http tls
+		caCrtPath := c.Http.CaCert
+		pool := x509.NewCertPool()
+		crt, err := ioutil.ReadFile(caCrtPath)
+		if err != nil {
+			klog.Errorf("Failed to read cert %s:%v", caCrtPath, err)
+			return err
+		}
+		pool.AppendCertsFromPEM(crt)
+		hc.server = &http.Server{
+			Addr:         hc.IP + ":" + hc.Port,
+			WriteTimeout: hc.WriteTimeout,
+			ReadTimeout:  hc.ReadTimeout,
+			Handler:      hc.restController.Router,
+			TLSConfig: &tls.Config{
+				ClientCAs: pool,
+				// check client certificate file
+				ClientAuth: tls.RequireAndVerifyClientCert,
+			},
+		}
 	}
 	klog.V(1).Info("HttpServer Start......")
 	go func() {
@@ -65,7 +75,7 @@ func (hc *HttpClient) Init(c config.Config) error {
 			klog.Errorf("Http Receive error:%v", err)
 		}
 	}()
-	return err
+	return nil
 }
 
 // UnInit is a method to close http server
@@ -84,13 +94,23 @@ func (hc *HttpClient) Send(message interface{}) error {
 
 // Receive http server start listen
 func (hc *HttpClient) Receive(c config.Config) (interface{}, error) {
-	serverCrtPath := c.Http.Cert
-	serverKeyPath := c.Http.PrivateKey
-	err := hc.server.ListenAndServeTLS(serverCrtPath,
-		serverKeyPath)
-	if err != nil {
+	if c.Http.CaCert == "" && c.Http.Cert == "" && c.Http.PrivateKey == "" {
+		err := hc.server.ListenAndServe()
+		if err != nil {
+			return nil, err
+		}
+	} else if c.Http.Cert != "" && c.Http.PrivateKey != "" {
+		serverCrtPath := c.Http.Cert
+		serverKeyPath := c.Http.PrivateKey
+		err := hc.server.ListenAndServeTLS(serverCrtPath,
+			serverKeyPath)
+		if err != nil {
+			klog.Error("HTTP Server exited...")
+			return "", err
+		}
+	} else {
+		err := errors.New("the certificate file provided is incomplete or does not match")
 		return "", err
 	}
-	klog.Error("HTTP Server exited")
 	return "", nil
 }

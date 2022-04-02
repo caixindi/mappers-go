@@ -248,6 +248,10 @@ func DeleteDevice(instanceID string, dic *di.Container) (kind common.ErrKind) {
 // ReadDeviceData internal callback function
 func ReadDeviceData(deviceID string, propertyName string, dic *di.Container) (response string, kind common.ErrKind) {
 	deviceInstance := instancepool.DeviceInstancesNameFrom(dic.Get)
+	if _, ok := deviceInstance[deviceID]; !ok {
+		kind := common.KindEntityDoesNotExist
+		return "", kind
+	}
 	index := -1
 	for i, twin := range deviceInstance[deviceID].Twins {
 		if twin.PropertyName == propertyName {

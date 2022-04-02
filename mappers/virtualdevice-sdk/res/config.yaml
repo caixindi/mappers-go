@@ -10,5 +10,5 @@ mqtt:
 http:
   certification: ../res/server.pem
   privatekey: ../res/server.key
-  caCert: ../res/httpca.pem
+  caCert: ""
 configmap: ../res/virtual_device_test.json
