@@ -188,7 +188,7 @@ You must provide a JSON body that conforms to the CRD definition
 5. Delete a deviceInstance  
    Method=<font color=#FF5555>**DEL**</font>
    https://127.0.0.1:1215/api/v1/callback/device/id/deviceInstances-ID
-### Enable Restful Security Features
+## Enable Restful Security Features
 The steps for generating certificates are similar to those for MQTT certificates. You can refer to the MQTT certificate generation steps.
 
 Make the following convention, use a three-digit binary number, from left to right, represent the file path of the CA certificate, the server certificate, and the server key, whether the file path is provided, the number zero means the file is not provided, and the number one means the file is provided.
