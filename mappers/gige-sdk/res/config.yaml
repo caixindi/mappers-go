@@ -1,13 +1,14 @@
 mqtt:
-  server: mqtt://192.168.137.51:1883
-  servicename: 192.168.137.51
+  server: mqtts://10.116.32.0:18883
+  servername: 192.168.137.51
   username: "wq"
   password: "1234"
-  certification: ../res/client.pem
+  clientId: "test"
+  certification: ../res/client.crt
   privatekey: ../res/client.key
-  caCert: ../res/ca.pem
+  caCert: ../res/ca.crt
 http:
   certification: ../res/server.pem
   privatekey: ../res/server.key
-  caCert: ../res/httpca.pem
+  caCert: ""
 configmap: ../res/configmap_test.json
