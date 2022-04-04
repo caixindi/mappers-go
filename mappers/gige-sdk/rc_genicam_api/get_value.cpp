@@ -4,8 +4,7 @@ extern "C" int get_value(MyDevice myDevice, const char* key, char** value, char*
 	int ret = 0;
 	*err = (char*)"";
 	std::string v = "";
-	try
-	{
+	try {
 		std::shared_ptr<GenApi::CNodeMapRef> nodemap = myDevice.dev->getRemoteNodeMap();
 		v = rcg::getString(nodemap, key);
 		if (v.size() != 0) {
@@ -13,8 +12,7 @@ extern "C" int get_value(MyDevice myDevice, const char* key, char** value, char*
 			strcpy(*value, v.c_str());
 		}
 	}
-	catch (const GENICAM_NAMESPACE::GenericException& ex)
-	{
+	catch (const GENICAM_NAMESPACE::GenericException& ex) {
 		ret = 1;
 		//std::cout << ex.what() << std::endl;
 		std::string e = ex.what();
