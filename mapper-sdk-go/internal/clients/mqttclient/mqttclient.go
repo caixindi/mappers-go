@@ -4,7 +4,6 @@ package mqttclient
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"io/ioutil"
 	"k8s.io/klog/v2"
@@ -60,7 +59,6 @@ func newTLSConfig(caCert string, certFile string, privateKey string, serverName 
 
 // Connect used to the Mqtt server.
 func (mc *MqttClient) Connect() error {
-	fmt.Println(mc.ClientId)
 	opts := mqtt.NewClientOptions().AddBroker(mc.IP).SetClientID("").SetCleanSession(true)
 	if mc.Cert != "" {
 		tlsConfig, err := newTLSConfig(mc.CaCert, mc.Cert, mc.PrivateKey, mc.ServerName)
