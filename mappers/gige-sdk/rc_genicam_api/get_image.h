@@ -39,7 +39,7 @@
   @param size         The length of the image_buffer
   @param err          The error infomation
   @return             The status of the function execution(0 is correct,
-                      otherwise it is wrong)
+					  otherwise it is wrong)
 */
 extern "C" int get_image(MyDevice myDevice, const char* imgfmt, unsigned char** image_buffer, int* size, char** err);
 int storeBufferPNM(const rcg::Image& image, unsigned char** image_buffer, size_t yoffset, size_t height);

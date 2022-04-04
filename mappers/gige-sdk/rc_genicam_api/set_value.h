@@ -14,6 +14,6 @@
   @param value    The value of the device attribute
   @param err      The error infomation
   @return         The status of the function execution(0 is correct,
-                  otherwise it is wrong)
+				  otherwise it is wrong)
 */
 extern "C" int set_value(MyDevice myDevice, const char* key, const char* value, char** err);

@@ -64,16 +64,13 @@ int main() {
 				std::cout << "2:" << err << std::endl;
 			}
 		}
-		catch (const std::exception& ex)
-		{
+		catch (const std::exception& ex) {
 			std::cout << "Exception: " << ex.what() << std::endl;
 		}
-		catch (const GENICAM_NAMESPACE::GenericException& ex)
-		{
+		catch (const GENICAM_NAMESPACE::GenericException& ex) {
 			std::cout << "Exception: " << ex.what() << std::endl;
 		}
-		catch (...)
-		{
+		catch (...) {
 			std::cout << "Unknown exception!" << std::endl;
 		}
 
