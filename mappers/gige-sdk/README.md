@@ -4,8 +4,8 @@ GigE Mapper supports GigE Vision protocol cameras access. It uses the third-part
 
 ## Supported functions
 
-- Support the connection of GigE cameras. Actively connecting with the camera through the device SN. One Mapper can support multiple cameras to be connected at the same time, which can be distinguished by the device SN. You can use the tool [gc_config](###gc_config) provided by rc_genicam_api to query the camera SN.
-- Support the parameter configuration of GigE camera. Configure various parameters of the camera through the ymal file, and use the tool [gc_info](###gc_info) provided by rc_genicam_api to query the camera parameter name, data type and configurable range.
+- Support the connection of GigE cameras. Actively connecting with the camera through the device SN. One Mapper can support multiple cameras to be connected at the same time, which can be distinguished by the device SN. You can use the tool [gc_config](#gc_config) provided by rc_genicam_api to query the camera SN.
+- Support the parameter configuration of GigE camera. Configure various parameters of the camera through the ymal file, and use the tool [gc_info](#gc_info) provided by rc_genicam_api to query the camera parameter name, data type and configurable range.
 - Support camera capture function, support for exporting PNG and PNM image formats, and support the following pixel formats processing:
 
   - Monochrome pixel formats 
