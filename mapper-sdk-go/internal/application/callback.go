@@ -146,21 +146,21 @@ func AddDevice(addDeviceRequest requests.AddDeviceRequest, dic *di.Container) (k
 			ProtocolConfig:       deviceInstance.PProtocol.ProtocolConfigs,
 		}
 	}
-	var waitInit *sync.WaitGroup
-	waitInit = new(sync.WaitGroup)
+
+	waitInit := new(sync.WaitGroup)
 	waitInit.Add(1)
 	go func() {
 		ctx, cancelFunc := context.WithCancel(context.Background())
-		err := mqttadapter.SendTwin(instanceID, deviceInstance, driver, mqttClient, wg, dic, mapMutex[instanceID], ctx)
+		err := mqttadapter.SendTwin(ctx, instanceID, deviceInstance, driver, mqttClient, wg, dic, mapMutex[instanceID])
 		if err != nil {
 			klog.Errorf("Failed to get %s %s:%v\n", instanceID, "twin", err)
 		} else {
-			err = mqttadapter.SendData(instanceID, deviceInstance, driver, mqttClient, wg, dic, mapMutex[instanceID], ctx)
+			err = mqttadapter.SendData(ctx, instanceID, deviceInstance, driver, mqttClient, wg, dic, mapMutex[instanceID])
 			if err != nil {
 				klog.Errorf("Failed to get %s %s:%v\n", instanceID, "data", err)
 				kind = common.KindServerError
 			}
-			err = mqttadapter.SendDeviceState(instanceID, deviceInstance, driver, mqttClient, wg, dic, mapMutex[instanceID], ctx)
+			err = mqttadapter.SendDeviceState(ctx, instanceID, deviceInstance, driver, mqttClient, wg, dic, mapMutex[instanceID])
 			if err != nil {
 				klog.Errorf("Failed to get %s %s:%v\n", instanceID, "state", err)
 				kind = common.KindServerError
@@ -209,9 +209,7 @@ func DeleteDevice(instanceID string, dic *di.Container) (kind common.ErrKind) {
 		cancelFunc()
 		modelNameDeleted := deviceInstances[instanceID].Model
 		protocolNameDeleted := deviceInstances[instanceID].ProtocolName
-		if _, ok := deviceInstances[instanceID]; ok {
-			delete(deviceInstances, instanceID)
-		}
+		delete(deviceInstances, instanceID)
 		modelFlag := true
 		protocolFlag := true
 		for k, v := range deviceInstances {
@@ -277,7 +275,7 @@ func ReadDeviceData(deviceID string, propertyName string, dic *di.Container) (re
 func WriteDeviceData(deviceID string, values url.Values, dic *di.Container) (kind common.ErrKind) {
 	deviceInstance := instancepool.DeviceInstancesNameFrom(dic.Get)
 	if _, ok := deviceInstance[deviceID]; !ok {
-		return common.KindInvalidId
+		return common.KindInvalidID
 	}
 	for k, v := range values {
 		for i, twin := range deviceInstance[deviceID].Twins {

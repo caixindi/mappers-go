@@ -44,15 +44,15 @@ func Bootstrap(serviceName string, deviceInterface interface{}) {
 
 func publishMqtt(id string, instance *configmap.DeviceInstance) {
 	ctx, cancelFunc := context.WithCancel(context.Background())
-	err := mqttadapter.SendTwin(id, instance, ms.driver, ms.mqttClient, ms.wg, ms.dic, ms.deviceMutex[id], ctx)
+	err := mqttadapter.SendTwin(ctx, id, instance, ms.driver, ms.mqttClient, ms.wg, ms.dic, ms.deviceMutex[id])
 	if err != nil {
 		klog.Errorf("Failed to get %s %s:%v\n", id, "twin", err)
 	} else {
-		err = mqttadapter.SendData(id, instance, ms.driver, ms.mqttClient, ms.wg, ms.dic, ms.deviceMutex[id], ctx)
+		err = mqttadapter.SendData(ctx, id, instance, ms.driver, ms.mqttClient, ms.wg, ms.dic, ms.deviceMutex[id])
 		if err != nil {
 			klog.Errorf("Failed to get %s %s:%v\n", id, "data", err)
 		}
-		err = mqttadapter.SendDeviceState(id, instance, ms.driver, ms.mqttClient, ms.wg, ms.dic, ms.deviceMutex[id], ctx)
+		err = mqttadapter.SendDeviceState(ctx, id, instance, ms.driver, ms.mqttClient, ms.wg, ms.dic, ms.deviceMutex[id])
 		if err != nil {
 			klog.Errorf("Failed to get %s %s:%v\n", id, "state", err)
 		}
@@ -62,7 +62,7 @@ func publishMqtt(id string, instance *configmap.DeviceInstance) {
 }
 
 func initSubscribeMqtt() error {
-	for k, _ := range ms.deviceInstances {
+	for k := range ms.deviceInstances {
 		topic := fmt.Sprintf(common.TopicTwinUpdateDelta, k)
 		onMessage := func(client mqtt.Client, message mqtt.Message) {
 			mqttadapter.SyncInfo(ms.dic, message)

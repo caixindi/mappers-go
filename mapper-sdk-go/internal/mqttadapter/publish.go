@@ -15,7 +15,7 @@ import (
 )
 
 // SendTwin send twin to EdgeCore according to timer
-func SendTwin(id string, instance *configmap.DeviceInstance, drivers models.ProtocolDriver, mqttClient mqttclient.MqttClient, wg *sync.WaitGroup, dic *di.Container, mutex *common.Lock, ctx context.Context) error {
+func SendTwin(ctx context.Context, id string, instance *configmap.DeviceInstance, drivers models.ProtocolDriver, mqttClient mqttclient.MqttClient, wg *sync.WaitGroup, dic *di.Container, mutex *common.Lock) error {
 	for _, twinV := range instance.Twins {
 		// ---------------setVisitor---------------
 		err := controller.SetVisitor(id, twinV, drivers, mutex, dic)
@@ -31,7 +31,6 @@ func SendTwin(id string, instance *configmap.DeviceInstance, drivers models.Prot
 			go func() {
 				defer wg.Done()
 				<-ctx.Done()
-				return
 			}()
 		} else {
 			// If the collect cycle is not set, set it to 1 second.
@@ -59,7 +58,6 @@ func SendTwin(id string, instance *configmap.DeviceInstance, drivers models.Prot
 				defer wg.Done()
 				<-ctx.Done()
 				timer.Stop()
-				return
 			}()
 		}
 
@@ -69,7 +67,7 @@ func SendTwin(id string, instance *configmap.DeviceInstance, drivers models.Prot
 }
 
 // SendData send twin to third-part application according to timer
-func SendData(id string, instance *configmap.DeviceInstance, drivers models.ProtocolDriver, mqttClient mqttclient.MqttClient, wg *sync.WaitGroup, dic *di.Container, mutex *common.Lock, ctx context.Context) error {
+func SendData(ctx context.Context, id string, instance *configmap.DeviceInstance, drivers models.ProtocolDriver, mqttClient mqttclient.MqttClient, wg *sync.WaitGroup, dic *di.Container, mutex *common.Lock) error {
 	for _, twinV := range instance.Twins {
 		// ---------------Send Data by MQTT---------------
 		collectCycle := time.Duration(twinV.PVisitor.CollectCycle)
@@ -79,7 +77,6 @@ func SendData(id string, instance *configmap.DeviceInstance, drivers models.Prot
 			go func() {
 				defer wg.Done()
 				<-ctx.Done()
-				return
 			}()
 		} else {
 			if collectCycle == 0 {
@@ -101,14 +98,12 @@ func SendData(id string, instance *configmap.DeviceInstance, drivers models.Prot
 			timer := common.Timer{Function: twinData.Run, Duration: collectCycle, Times: 0}
 			wg.Add(1)
 			go func() {
-
 				timer.Start()
 			}()
 			go func() {
 				defer wg.Done()
 				<-ctx.Done()
 				timer.Stop()
-				return
 			}()
 		}
 		// ---------------Send Data by MQTT---------------
@@ -117,7 +112,7 @@ func SendData(id string, instance *configmap.DeviceInstance, drivers models.Prot
 }
 
 // SendDeviceState send device's state to EdgeCore according to timer
-func SendDeviceState(id string, instance *configmap.DeviceInstance, drivers models.ProtocolDriver, mqttClient mqttclient.MqttClient, wg *sync.WaitGroup, dic *di.Container, mutex *common.Lock, ctx context.Context) error {
+func SendDeviceState(ctx context.Context, id string, instance *configmap.DeviceInstance, drivers models.ProtocolDriver, mqttClient mqttclient.MqttClient, wg *sync.WaitGroup, dic *di.Container, mutex *common.Lock) error {
 	var statusData StatusData
 	var collectCycle time.Duration
 	for _, twinV := range instance.Twins {
@@ -128,7 +123,6 @@ func SendDeviceState(id string, instance *configmap.DeviceInstance, drivers mode
 			go func() {
 				defer wg.Done()
 				<-ctx.Done()
-				return
 			}()
 		} else {
 			// If the collect cycle is not set, set it to 1 second.
@@ -155,7 +149,6 @@ func SendDeviceState(id string, instance *configmap.DeviceInstance, drivers mode
 				defer wg.Done()
 				<-ctx.Done()
 				timer.Stop()
-				return
 			}()
 		}
 	}

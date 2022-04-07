@@ -12,7 +12,7 @@ func CodeMapping(kind common.ErrKind) int {
 		return http.StatusInternalServerError
 	case common.KindEntityDoesNotExist:
 		return http.StatusRequestedRangeNotSatisfiable
-	case common.KindInvalidId:
+	case common.KindInvalidID:
 		return http.StatusBadGateway
 	case common.KindServiceUnavailable:
 		return http.StatusServiceUnavailable

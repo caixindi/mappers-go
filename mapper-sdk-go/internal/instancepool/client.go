@@ -1,6 +1,5 @@
 // Package instancepool used to provide a pool to get MapperService's instance,
 // like deviceInstances map[string]*configmap.DeviceInstance ,deviceModels map[string]*configmap.DeviceModel, etc.
-
 package instancepool
 
 import (

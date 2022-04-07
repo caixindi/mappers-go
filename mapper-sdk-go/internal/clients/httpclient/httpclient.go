@@ -16,7 +16,7 @@ import (
 )
 
 // HttpClient is structure used to init HttpClient
-type HttpClient struct {
+type HTTPClient struct {
 	IP             string
 	Port           string
 	WriteTimeout   time.Duration
@@ -26,8 +26,8 @@ type HttpClient struct {
 }
 
 // NewHttpClient initializes a new Http client instance
-func NewHttpClient(dic *di.Container) *HttpClient {
-	return &HttpClient{
+func NewHTTPClient(dic *di.Container) *HTTPClient {
+	return &HTTPClient{
 		IP:             "0.0.0.0",
 		Port:           "1215",
 		WriteTimeout:   5 * time.Second,
@@ -37,9 +37,9 @@ func NewHttpClient(dic *di.Container) *HttpClient {
 }
 
 // Init is a method to construct HTTP server
-func (hc *HttpClient) Init(c config.Config) error {
+func (hc *HTTPClient) Init(c config.Config) error {
 	hc.restController.InitRestRoutes()
-	if c.Http.CaCert == "" {
+	if c.HTTP.CaCert == "" {
 		hc.server = &http.Server{
 			Addr:         hc.IP + ":" + hc.Port,
 			WriteTimeout: hc.WriteTimeout,
@@ -48,7 +48,7 @@ func (hc *HttpClient) Init(c config.Config) error {
 		}
 	} else {
 		// Enable two-way authentication http tls
-		caCrtPath := c.Http.CaCert
+		caCrtPath := c.HTTP.CaCert
 		pool := x509.NewCertPool()
 		crt, err := ioutil.ReadFile(caCrtPath)
 		if err != nil {
@@ -79,7 +79,7 @@ func (hc *HttpClient) Init(c config.Config) error {
 }
 
 // UnInit is a method to close http server
-func (hc *HttpClient) UnInit() {
+func (hc *HTTPClient) UnInit() {
 	err := hc.server.Close()
 	if err != nil {
 		klog.Error("Http server close err:", err.Error())
@@ -88,20 +88,20 @@ func (hc *HttpClient) UnInit() {
 }
 
 // Send no messages need to be sent
-func (hc *HttpClient) Send(message interface{}) error {
+func (hc *HTTPClient) Send(message interface{}) error {
 	return nil
 }
 
 // Receive http server start listen
-func (hc *HttpClient) Receive(c config.Config) (interface{}, error) {
-	if c.Http.CaCert == "" && c.Http.Cert == "" && c.Http.PrivateKey == "" {
+func (hc *HTTPClient) Receive(c config.Config) (interface{}, error) {
+	if c.HTTP.CaCert == "" && c.HTTP.Cert == "" && c.HTTP.PrivateKey == "" {
 		err := hc.server.ListenAndServe()
 		if err != nil {
 			return nil, err
 		}
-	} else if c.Http.Cert != "" && c.Http.PrivateKey != "" {
-		serverCrtPath := c.Http.Cert
-		serverKeyPath := c.Http.PrivateKey
+	} else if c.HTTP.Cert != "" && c.HTTP.PrivateKey != "" {
+		serverCrtPath := c.HTTP.Cert
+		serverKeyPath := c.HTTP.PrivateKey
 		err := hc.server.ListenAndServeTLS(serverCrtPath,
 			serverKeyPath)
 		if err != nil {

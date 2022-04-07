@@ -26,22 +26,22 @@ const (
 )
 
 const (
-	ApiVersion = "v1"
-	ApiBase    = "/api/v1"
+	APIVersion = "v1"
+	APIBase    = "/api/v1"
 
-	ApiDeviceRoute                 = ApiBase + "/device"
-	ApiDeviceWriteCommandByIdRoute = ApiDeviceRoute + "/" + Id + "/{" + IdAndCommand + "}"
-	ApiDeviceReadCommandByIdRoute  = ApiDeviceRoute + "/" + Id + "/{" + Id + "}" + "/{" + Command + "}"
-	ApiDeviceCallbackRoute         = ApiBase + "/callback/device"
-	ApiDeviceCallbackIdRoute       = ApiBase + "/callback/device/id/{id}"
+	APIDeviceRoute                 = APIBase + "/device"
+	APIDeviceWriteCommandByIDRoute = APIDeviceRoute + "/" + ID + "/{" + IDAndCommand + "}"
+	APIDeviceReadCommandByIDRoute  = APIDeviceRoute + "/" + ID + "/{" + ID + "}" + "/{" + Command + "}"
+	APIDeviceCallbackRoute         = APIBase + "/callback/device"
+	APIDeviceCallbackIDRoute       = APIBase + "/callback/device/id/{id}"
 
-	ApiPingRoute = ApiBase + "/ping"
+	APIPingRoute = APIBase + "/ping"
 )
 
 const (
-	Id           = "id"
+	ID           = "id"
 	Command      = "command"
-	IdAndCommand = "IdAndCommand"
+	IDAndCommand = "IdAndCommand"
 )
 
 // Constants related to the possible content types supported by the APIs
@@ -57,7 +57,7 @@ const (
 	KindEntityDoesNotExist  ErrKind = "NotFound"
 	KindServerError         ErrKind = "UnexpectedServerError"
 	KindDuplicateName       ErrKind = "DuplicateName"
-	KindInvalidId           ErrKind = "InvalidId"
+	KindInvalidID           ErrKind = "InvalidId"
 	KindServiceUnavailable  ErrKind = "ServiceUnavailable"
 	KindNotAllowed          ErrKind = "NotAllowed"
 	KindServiceLocked       ErrKind = "ServiceLocked"

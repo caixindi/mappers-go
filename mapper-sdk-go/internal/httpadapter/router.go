@@ -28,13 +28,13 @@ func NewRestController(r *mux.Router, dic *di.Container) *RestController {
 func (c *RestController) InitRestRoutes() {
 	klog.V(1).Info("Registering v1 routes...")
 	// common
-	c.addReservedRoute(common.ApiPingRoute, c.Ping).Methods(http.MethodGet)
+	c.addReservedRoute(common.APIPingRoute, c.Ping).Methods(http.MethodGet)
 	//// device command
-	c.addReservedRoute(common.ApiDeviceWriteCommandByIdRoute, c.WriteCommand).Methods(http.MethodPut)
-	c.addReservedRoute(common.ApiDeviceReadCommandByIdRoute, c.ReadCommand).Methods(http.MethodGet)
+	c.addReservedRoute(common.APIDeviceWriteCommandByIDRoute, c.WriteCommand).Methods(http.MethodPut)
+	c.addReservedRoute(common.APIDeviceReadCommandByIDRoute, c.ReadCommand).Methods(http.MethodGet)
 	// callback
-	c.addReservedRoute(common.ApiDeviceCallbackRoute, c.AddDevice).Methods(http.MethodPost)
-	c.addReservedRoute(common.ApiDeviceCallbackIdRoute, c.RemoveDevice).Methods(http.MethodDelete)
+	c.addReservedRoute(common.APIDeviceCallbackRoute, c.AddDevice).Methods(http.MethodPost)
+	c.addReservedRoute(common.APIDeviceCallbackIDRoute, c.RemoveDevice).Methods(http.MethodDelete)
 }
 
 func (c *RestController) addReservedRoute(route string, handler func(http.ResponseWriter, *http.Request)) *mux.Route {
@@ -59,7 +59,6 @@ func (c *RestController) sendResponse(
 	api string,
 	response interface{},
 	statusCode int) {
-
 	correlationID := request.Header.Get(common.CorrelationHeader)
 
 	writer.Header().Set(common.CorrelationHeader, correlationID)

@@ -109,11 +109,11 @@ func GetConnectInfo(
 	devices map[string]*DeviceInstance,
 	connectInfo map[string]*ConnectInfo) {
 	for id, instance := range devices {
-		tempId := id
+		tempID := id
 		tempInstance := instance
 		for _, visitorV := range tempInstance.PropertyVisitors {
 			tempVisitorV := visitorV
-			driverName := common.DriverPrefix + tempId + visitorV.PropertyName
+			driverName := common.DriverPrefix + tempID + visitorV.PropertyName
 			connectInfo[driverName] = &ConnectInfo{
 				ProtocolCommonConfig: tempInstance.PProtocol.ProtocolCommonConfig,
 				VisitorConfig:        tempVisitorV.VisitorConfig,

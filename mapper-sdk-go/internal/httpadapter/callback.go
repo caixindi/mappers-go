@@ -20,19 +20,19 @@ func (c *RestController) AddDevice(writer http.ResponseWriter, request *http.Req
 	err := json.NewDecoder(request.Body).Decode(&addDeviceRequest)
 	if err != nil {
 		klog.Error("Failed to decode JSON", err)
-		c.sendMapperError(writer, request, err.Error(), common.ApiDeviceCallbackRoute)
+		c.sendMapperError(writer, request, err.Error(), common.APIDeviceCallbackRoute)
 		return
 	}
 	kind := application.AddDevice(addDeviceRequest, c.dic)
 	if kind == "" {
 		baseMessage := response.NewBaseResponse("", "", http.StatusOK)
 		res := response.NewUpdateDeviceResponse(baseMessage, addDeviceRequest.DeviceInstance.ID, "add device", "Successful")
-		c.sendResponse(writer, request, common.ApiDeviceCallbackRoute, res, http.StatusOK)
+		c.sendResponse(writer, request, common.APIDeviceCallbackRoute, res, http.StatusOK)
 	} else {
 		httpCode := response.CodeMapping(kind)
 		baseMessage := response.NewBaseResponse("", "", httpCode)
 		res := response.NewUpdateDeviceResponse(baseMessage, addDeviceRequest.DeviceInstance.ID, "add device", string(kind))
-		c.sendResponse(writer, request, common.ApiDeviceCallbackRoute, res, httpCode)
+		c.sendResponse(writer, request, common.APIDeviceCallbackRoute, res, httpCode)
 	}
 }
 
@@ -46,12 +46,12 @@ func (c *RestController) RemoveDevice(writer http.ResponseWriter, request *http.
 	if kind == "" {
 		baseMessage := response.NewBaseResponse("", "", http.StatusOK)
 		res := response.NewUpdateDeviceResponse(baseMessage, instanceID, "remove device", "Successful")
-		c.sendResponse(writer, request, common.ApiDeviceCallbackIdRoute, res, http.StatusOK)
+		c.sendResponse(writer, request, common.APIDeviceCallbackIDRoute, res, http.StatusOK)
 	} else {
 		httpCode := response.CodeMapping(kind)
 		baseMessage := response.NewBaseResponse("", "", httpCode)
 		res := response.NewUpdateDeviceResponse(baseMessage, instanceID, "remove device", string(kind))
-		c.sendResponse(writer, request, common.ApiDeviceCallbackIdRoute, res, httpCode)
+		c.sendResponse(writer, request, common.APIDeviceCallbackIDRoute, res, httpCode)
 	}
 }
 
@@ -68,7 +68,7 @@ func (c *RestController) WriteCommand(writer http.ResponseWriter, request *http.
 	itemLen := len(urlItem)
 	if len(reserved) != 1 {
 		baseMessage := response.NewBaseResponse("", "Some errors have occurred", 500)
-		c.sendResponse(writer, request, common.ApiDeviceWriteCommandByIdRoute, baseMessage, 500)
+		c.sendResponse(writer, request, common.APIDeviceWriteCommandByIDRoute, baseMessage, 500)
 		return
 	}
 	kind := application.WriteDeviceData(urlItem[itemLen-1], reserved, c.dic)
@@ -80,10 +80,10 @@ func (c *RestController) WriteCommand(writer http.ResponseWriter, request *http.
 	baseMessage := response.NewBaseResponse("", "", httpCode)
 	if httpCode < 300 {
 		res := response.NewWriteCommandResponse(baseMessage, urlItem[itemLen-1], propertyName, "successful")
-		c.sendResponse(writer, request, common.ApiDeviceWriteCommandByIdRoute, res, httpCode)
+		c.sendResponse(writer, request, common.APIDeviceWriteCommandByIDRoute, res, httpCode)
 	} else {
 		res := response.NewWriteCommandResponse(baseMessage, urlItem[itemLen-1], propertyName, "failed")
-		c.sendResponse(writer, request, common.ApiDeviceWriteCommandByIdRoute, res, httpCode)
+		c.sendResponse(writer, request, common.APIDeviceWriteCommandByIDRoute, res, httpCode)
 	}
 }
 
@@ -96,9 +96,9 @@ func (c *RestController) ReadCommand(writer http.ResponseWriter, request *http.R
 	baseMessage := response.NewBaseResponse("", "", httpCode)
 	if httpCode < 300 {
 		res := response.NewReadCommandResponse(baseMessage, urlItem[itemLen-2], urlItem[itemLen-1], value)
-		c.sendResponse(writer, request, common.ApiDeviceReadCommandByIdRoute, res, httpCode)
+		c.sendResponse(writer, request, common.APIDeviceReadCommandByIDRoute, res, httpCode)
 	} else {
 		res := response.NewReadCommandResponse(baseMessage, urlItem[itemLen-2], urlItem[itemLen-1], string(kind))
-		c.sendResponse(writer, request, common.ApiDeviceReadCommandByIdRoute, res, httpCode)
+		c.sendResponse(writer, request, common.APIDeviceReadCommandByIDRoute, res, httpCode)
 	}
 }

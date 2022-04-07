@@ -17,7 +17,7 @@ type MqttClient struct {
 	IP         string
 	User       string
 	Passwd     string
-	ClientId   string
+	ClientID   string
 	Cert       string
 	PrivateKey string
 	Client     mqtt.Client
@@ -68,7 +68,7 @@ func (mc *MqttClient) Connect() error {
 		opts.SetTLSConfig(tlsConfig)
 		opts.SetUsername(mc.User)
 		opts.SetPassword(mc.Passwd)
-		opts.SetClientID(mc.ClientId)
+		opts.SetClientID(mc.ClientID)
 	} else {
 		opts.SetUsername(mc.User)
 		opts.SetPassword(mc.Passwd)

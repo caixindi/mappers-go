@@ -10,13 +10,13 @@ import (
 )
 
 var SensorData GatewayData
+
 type MqttProtocolConfig struct {
 	ProtocolName       string `json:"protocolName"`
 	ProtocolConfigData `json:"configData"`
 }
 
 type ProtocolConfigData struct {
-
 }
 
 type MqttProtocolCommonConfig struct {
@@ -24,8 +24,8 @@ type MqttProtocolCommonConfig struct {
 }
 
 type CommonCustomizedValues struct {
-	IP string `json:"IP"`
-	Port int `json:"port"`
+	IP    string `json:"IP"`
+	Port  int    `json:"port"`
 	Topic string `json:"topic"`
 }
 type MqttVisitorConfig struct {
@@ -41,14 +41,13 @@ type GatewayData struct {
 	JsonData map[string]interface{}
 }
 
-
 // MQTT Realize the structure of random number
 type MQTT struct {
-	mutex                 sync.Mutex
-	protocolConfig MqttProtocolConfig
-	protocolCommonConfig  MqttProtocolCommonConfig
-	visitorConfig         MqttVisitorConfig
-	Client MqttClient
+	mutex                sync.Mutex
+	protocolConfig       MqttProtocolConfig
+	protocolCommonConfig MqttProtocolCommonConfig
+	visitorConfig        MqttVisitorConfig
+	Client               MqttClient
 }
 
 // InitDevice Sth that need to do in the first
@@ -70,7 +69,7 @@ func (d *MQTT) SetConfig(protocolCommon, visitor, protocol []byte) (server strin
 	if protocolCommon != nil {
 		if err = json.Unmarshal(protocolCommon, &d.protocolCommonConfig); err != nil {
 			fmt.Printf("Unmarshal ProtocolCommonConfig error: %v\n", err)
-			return  "", err
+			return "", err
 		}
 	}
 	if visitor != nil {
@@ -86,8 +85,8 @@ func (d *MQTT) SetConfig(protocolCommon, visitor, protocol []byte) (server strin
 			return "", err
 		}
 	}
-	server = d.protocolCommonConfig.IP + ":" +strconv.Itoa(d.protocolCommonConfig.Port)
-	return  server,nil
+	server = d.protocolCommonConfig.IP + ":" + strconv.Itoa(d.protocolCommonConfig.Port)
+	return server, nil
 
 }
 
@@ -98,7 +97,7 @@ func (d *MQTT) ReadDeviceData(protocolCommon, visitor, protocol []byte) (data in
 	if err != nil {
 		return nil, err
 	}
-	return SensorData.JsonData[d.visitorConfig.Feature],nil
+	return SensorData.JsonData[d.visitorConfig.Feature], nil
 }
 
 // WriteDeviceData is an interface that write data to a specific device, data's DataType is Consistent with configmap
@@ -114,7 +113,6 @@ func (d *MQTT) StopDevice() (err error) {
 	return nil
 }
 
-
 // GetDeviceStatus is an interface to get the device status true is OK , false is DISCONNECTED
 func (d *MQTT) GetDeviceStatus(protocolCommon, visitor, protocol []byte) (status bool) {
 	err := d.Client.Publish("pulse", "")
@@ -124,9 +122,8 @@ func (d *MQTT) GetDeviceStatus(protocolCommon, visitor, protocol []byte) (status
 	return true
 }
 
-
-func (d *MQTT )newClient(){
-	server := d.protocolCommonConfig.IP + ":" +strconv.Itoa(d.protocolCommonConfig.Port)
+func (d *MQTT) newClient() {
+	server := d.protocolCommonConfig.IP + ":" + strconv.Itoa(d.protocolCommonConfig.Port)
 	d.Client = MqttClient{
 		IP:         server,
 		User:       "huawei",
@@ -136,13 +133,13 @@ func (d *MQTT )newClient(){
 	}
 	err := d.Client.Connect()
 	if err != nil {
-		fmt.Printf("Failed to init mqtt client ,error:%v\n",err)
+		fmt.Printf("Failed to init mqtt client ,error:%v\n", err)
 		os.Exit(1)
 	}
-	fmt.Println(server ," connect Successful")
-	err = d.Client.Subscribe(d.protocolCommonConfig.Topic,onMessage)
+	fmt.Println(server, " connect Successful")
+	err = d.Client.Subscribe(d.protocolCommonConfig.Topic, onMessage)
 	if err != nil {
-		fmt.Printf("Failed to init mqtt client ,error:%v\n",err)
+		fmt.Printf("Failed to init mqtt client ,error:%v\n", err)
 		os.Exit(1)
 	}
 	fmt.Println("Subscribe Successful")

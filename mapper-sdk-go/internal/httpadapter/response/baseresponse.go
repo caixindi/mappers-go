@@ -5,7 +5,7 @@ import "gitee.com/ascend/mapper-go-sdk/mapper-sdk-go/internal/common"
 
 type BaseResponse struct {
 	Version    string
-	RequestId  string `json:"requestId,omitempty"`
+	RequestID  string `json:"requestId,omitempty"`
 	Message    string `json:"message,omitempty"`
 	StatusCode int    `json:"statusCode"`
 }
@@ -31,37 +31,37 @@ type UpdateDeviceResponse struct {
 	Status    string
 }
 
-func NewBaseResponse(requestId string, message string, statusCode int) BaseResponse {
+func NewBaseResponse(requestID string, message string, statusCode int) BaseResponse {
 	return BaseResponse{
-		Version:    common.ApiVersion,
-		RequestId:  requestId,
+		Version:    common.APIVersion,
+		RequestID:  requestID,
 		Message:    message,
 		StatusCode: statusCode,
 	}
 }
 
-func NewReadCommandResponse(response BaseResponse, deviceId, propertyName, value string) ReadCommandResponse {
+func NewReadCommandResponse(response BaseResponse, deviceID, propertyName, value string) ReadCommandResponse {
 	return ReadCommandResponse{
 		response,
-		deviceId,
+		deviceID,
 		propertyName,
 		value,
 	}
 }
 
-func NewWriteCommandResponse(response BaseResponse, deviceId, propertyName, status string) WriteCommandResponse {
+func NewWriteCommandResponse(response BaseResponse, deviceID, propertyName, status string) WriteCommandResponse {
 	return WriteCommandResponse{
 		response,
-		deviceId,
+		deviceID,
 		propertyName,
 		status,
 	}
 }
 
-func NewUpdateDeviceResponse(response BaseResponse, deviceId, operation, status string) UpdateDeviceResponse {
+func NewUpdateDeviceResponse(response BaseResponse, deviceID, operation, status string) UpdateDeviceResponse {
 	return UpdateDeviceResponse{
 		response,
-		deviceId,
+		deviceID,
 		operation,
 		status,
 	}

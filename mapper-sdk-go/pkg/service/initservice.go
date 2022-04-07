@@ -34,7 +34,7 @@ type MapperService struct {
 	dic             *di.Container
 	wg              *sync.WaitGroup
 	mqttClient      mqttclient.MqttClient
-	httpClient      *httpclient.HttpClient
+	httpClient      *httpclient.HTTPClient
 	mutex           *sync.Mutex
 	quit            chan os.Signal
 	stopFunctions   map[string]context.CancelFunc
@@ -75,7 +75,7 @@ func (ms *MapperService) InitMapperService(serviceName string, c config.Config, 
 		ServerName: c.Mqtt.ServerName,
 		User:       c.Mqtt.Username,
 		Passwd:     c.Mqtt.Password,
-		ClientId:   c.Mqtt.ClientId,
+		ClientID:   c.Mqtt.ClientID,
 		Cert:       c.Mqtt.Cert,
 		PrivateKey: c.Mqtt.PrivateKey,
 		CaCert:     c.Mqtt.CaCert,
@@ -126,7 +126,7 @@ func (ms *MapperService) InitMapperService(serviceName string, c config.Config, 
 			return ms.deviceMutex
 		},
 	})
-	ms.httpClient = httpclient.NewHttpClient(ms.dic)
+	ms.httpClient = httpclient.NewHTTPClient(ms.dic)
 	err = ms.httpClient.Init(c)
 	if err != nil {
 		klog.Errorf("Failed to start Http server:%v", err)
@@ -148,7 +148,7 @@ func (ms *MapperService) waitExit() {
 }
 
 func (ms *MapperService) initDeviceMutex() {
-	for i, _ := range ms.deviceInstances {
+	for i := range ms.deviceInstances {
 		ms.deviceMutex[i] = new(common.Lock)
 		ms.deviceMutex[i].DeviceLock = new(sync.Mutex)
 	}

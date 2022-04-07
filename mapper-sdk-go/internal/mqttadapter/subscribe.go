@@ -20,39 +20,38 @@ func SyncInfo(dic *di.Container, message mqtt.Message) {
 	deviceInstances := instancepool.DeviceInstancesNameFrom(dic.Get)
 	driver := instancepool.ProtocolDriverNameFrom(dic.Get)
 	mapMutex := instancepool.DeviceLockNameFrom(dic.Get)
-	if _, ok := deviceInstances[instanceID]; !ok {
+	_, ok := deviceInstances[instanceID]
+	if !ok {
 		klog.Errorf("Instance :%s does not exist", instanceID)
 		return
-	} else {
-		var delta DeviceTwinDelta
-		if err := json.Unmarshal(message.Payload(), &delta); err != nil {
-			klog.Errorf("Unmarshal message failed: %v", err)
+	}
+	var delta DeviceTwinDelta
+	if err := json.Unmarshal(message.Payload(), &delta); err != nil {
+		klog.Errorf("Unmarshal message failed: %v", err)
+		return
+	}
+	for twinName, twinValue := range delta.Delta {
+		i := 0
+		for i = 0; i < len(deviceInstances[instanceID].Twins); i++ {
+			if twinName == deviceInstances[instanceID].Twins[i].PropertyName {
+				break
+			}
+		}
+		if i == len(deviceInstances[instanceID].Twins) {
+			continue
+		}
+		// Desired value is not changed.
+		if deviceInstances[instanceID].Twins[i].Desired.Value == twinValue {
+			continue
+		}
+		klog.V(4).Infof("Set %s:%s value to %s", instanceID, twinName, twinValue)
+		deviceInstances[instanceID].Twins[i].Desired.Value = twinValue
+		err := controller.SetVisitor(instanceID, deviceInstances[instanceID].Twins[i], driver, mapMutex[instanceID], dic)
+		if err != nil {
+			klog.Error(err)
 			return
 		}
-		for twinName, twinValue := range delta.Delta {
-			i := 0
-			for i = 0; i < len(deviceInstances[instanceID].Twins); i++ {
-				if twinName == deviceInstances[instanceID].Twins[i].PropertyName {
-					break
-				}
-			}
-			if i == len(deviceInstances[instanceID].Twins) {
-				continue
-			}
-			// Desired value is not changed.
-			if deviceInstances[instanceID].Twins[i].Desired.Value == twinValue {
-				continue
-			}
-			klog.V(4).Infof("Set %s:%s value to %s", instanceID, twinName, twinValue)
-			deviceInstances[instanceID].Twins[i].Desired.Value = twinValue
-			err := controller.SetVisitor(instanceID, deviceInstances[instanceID].Twins[i], driver, mapMutex[instanceID], dic)
-			if err != nil {
-				klog.Error(err)
-				return
-			}
-		}
 	}
-
 }
 
 // UpdateDevice callback function of Mqtt subscribe message.
@@ -68,7 +67,6 @@ func UpdateDevice(dic *di.Container, message mqtt.Message) {
 	} else {
 		removeDevice(dic, message)
 	}
-
 }
 
 // removeDevice support for dynamically removing devices, delete only local memory data
@@ -86,9 +84,7 @@ func removeDevice(dic *di.Container, message mqtt.Message) {
 		cancelFunc()
 		modelNameDeleted := deviceInstances[instanceID].Model
 		protocolNameDeleted := deviceInstances[instanceID].ProtocolName
-		if _, ok := deviceInstances[instanceID]; ok {
-			delete(deviceInstances, instanceID)
-		}
+		delete(deviceInstances, instanceID)
 		modelFlag := true
 		protocolFlag := true
 		for k, v := range deviceInstances {
@@ -146,15 +142,15 @@ func addDevice(dic *di.Container, message mqtt.Message) {
 	configmap.GetConnectInfo(deviceInstances, connectInfo)
 	go func() {
 		ctx, cancelFunc := context.WithCancel(context.Background())
-		err := SendTwin(instanceID, deviceInstances[instanceID], driver, mqttClient, wg, dic, mapMutex[instanceID], ctx)
+		err := SendTwin(ctx, instanceID, deviceInstances[instanceID], driver, mqttClient, wg, dic, mapMutex[instanceID])
 		if err != nil {
 			klog.Errorf("Failed to get %s %s:%v\n", instanceID, "twin", err)
 		} else {
-			err = SendData(instanceID, deviceInstances[instanceID], driver, mqttClient, wg, dic, mapMutex[instanceID], ctx)
+			err = SendData(ctx, instanceID, deviceInstances[instanceID], driver, mqttClient, wg, dic, mapMutex[instanceID])
 			if err != nil {
 				klog.Errorf("Failed to get %s %s:%v\n", instanceID, "data", err)
 			}
-			err = SendDeviceState(instanceID, deviceInstances[instanceID], driver, mqttClient, wg, dic, mapMutex[instanceID], ctx)
+			err = SendDeviceState(ctx, instanceID, deviceInstances[instanceID], driver, mqttClient, wg, dic, mapMutex[instanceID])
 			if err != nil {
 				klog.Errorf("Failed to get %s %s:%v\n", instanceID, "state", err)
 			}
