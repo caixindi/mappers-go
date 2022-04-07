@@ -3,3 +3,4 @@ pkg/modbus/modbus
 pkg/bluetooth/bluetooth
 .idea
 vendor/
+mappers/gige-sdk
